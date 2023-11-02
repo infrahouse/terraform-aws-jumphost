@@ -1,0 +1,1015 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.10, pytest-7.4.3, pluggy-1.3.0 -- /home/aleks/.virtualenvs/terraform-aws-jumphost/bin/python
+cachedir: .pytest_cache
+rootdir: /mnt/c/Users/aleks/code/terraform-aws-jumphost
+plugins: rerunfailures-12.0, timeout-2.2.0
+collecting ... collected 1 item
+
+tests/test_module.py::test_module 
+Initializing the backend...
+Initializing modules...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/random from the dependency lock file
+- Reusing previous version of hashicorp/null from the dependency lock file
+- Reusing previous version of hashicorp/archive from the dependency lock file
+- Reusing previous version of hashicorp/cloudinit from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.23.1
+- Using previously-installed hashicorp/random v3.5.1
+- Using previously-installed hashicorp/null v3.2.1
+- Using previously-installed hashicorp/archive v2.4.0
+- Using previously-installed hashicorp/cloudinit v2.3.2
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+Downloading registry.terraform.io/infrahouse/service-network/aws 2.0.0 for service-network...
+- service-network in .terraform/modules/service-network
+- test in ../..
+Downloading registry.terraform.io/infrahouse/instance-profile/aws 1.0.0 for test.jumphost_profile...
+- test.jumphost_profile in .terraform/modules/test.jumphost_profile
+Downloading registry.terraform.io/infrahouse/cloud-init/aws 1.2.0 for test.jumphost_userdata...
+- test.jumphost_userdata in .terraform/modules/test.jumphost_userdata
+[0m[1mrandom_pet.hostname: Refreshing state... [id=upright-possum][0m
+[0m[1mmodule.test.module.jumphost_profile.data.aws_iam_policy_document.assume: Reading...[0m[0m
+[0m[1mdata.aws_route53_zone.cicd: Reading...[0m[0m
+[0m[1mmodule.test.data.aws_ami.ubuntu: Reading...[0m[0m
+[0m[1mmodule.test.data.aws_iam_policy.AWSLambdaBasicExecutionRole: Reading...[0m[0m
+[0m[1mmodule.test.data.aws_iam_policy_document.jumphost_permissions: Reading...[0m[0m
+[0m[1mmodule.test.data.aws_caller_identity.current: Reading...[0m[0m
+[0m[1mmodule.test.module.jumphost_userdata.data.aws_region.current: Reading...[0m[0m
+[0m[1mmodule.test.module.jumphost_userdata.data.aws_region.current: Read complete after 0s [id=us-west-1][0m
+[0m[1mmodule.test.data.aws_region.current: Reading...[0m[0m
+[0m[1mmodule.test.data.aws_iam_policy_document.jumphost_permissions: Read complete after 0s [id=2218315402][0m
+[0m[1mmodule.test.module.jumphost_profile.data.aws_iam_policy_document.assume: Read complete after 0s [id=2851119427][0m
+[0m[1mmodule.test.data.aws_iam_policy_document.assume_role: Reading...[0m[0m
+[0m[1mmodule.test.data.aws_region.current: Read complete after 0s [id=us-west-1][0m
+[0m[1mdata.aws_availability_zones.available: Reading...[0m[0m
+[0m[1mmodule.test.data.aws_iam_policy_document.assume_role: Read complete after 0s [id=2690255455][0m
+[0m[1maws_key_pair.test: Refreshing state... [id=terraform-20231101184650247400000001][0m
+[0m[1mmodule.service-network.aws_vpc.vpc: Refreshing state... [id=vpc-0c5004caac404bbc8][0m
+[0m[1mmodule.test.module.jumphost_userdata.data.cloudinit_config.config: Reading...[0m[0m
+[0m[1mmodule.test.module.jumphost_userdata.data.cloudinit_config.config: Read complete after 0s [id=115635260][0m
+[0m[1mdata.aws_availability_zones.available: Read complete after 0s [id=us-west-1][0m
+[0m[1mmodule.service-network.aws_eip.nat_eip["10.1.0.0/24"]: Refreshing state... [id=eipalloc-0dc786fa8f1f84880][0m
+[0m[1mmodule.service-network.aws_eip.nat_eip["10.1.1.0/24"]: Refreshing state... [id=eipalloc-017dd1b17c06f75e7][0m
+[0m[1mmodule.test.data.aws_ami.ubuntu: Read complete after 1s [id=ami-0f324e1cd5c4465c8][0m
+[0m[1mmodule.test.data.aws_caller_identity.current: Read complete after 1s [id=303467602807][0m
+[0m[1mmodule.service-network.aws_internet_gateway.ig: Refreshing state... [id=igw-0aadacec173f193b8][0m
+[0m[1mmodule.service-network.aws_default_route_table.default: Refreshing state... [id=rtb-08b2d84d89315e293][0m
+[0m[1mmodule.service-network.aws_default_security_group.default: Refreshing state... [id=sg-03af722ec9e1beaa0][0m
+[0m[1mmodule.service-network.aws_route_table.all["10.1.3.0/24"]: Refreshing state... [id=rtb-0fafe25527f02c779][0m
+[0m[1mmodule.service-network.aws_subnet.all["10.1.1.0/24"]: Refreshing state... [id=subnet-025cdc57f4b0ae420][0m
+[0m[1mmodule.service-network.aws_route_table.all["10.1.1.0/24"]: Refreshing state... [id=rtb-0df4dcefedafb9299][0m
+[0m[1mmodule.service-network.aws_route_table.all["10.1.2.0/24"]: Refreshing state... [id=rtb-086b2dc47a055ca86][0m
+[0m[1mmodule.service-network.aws_route_table.all["10.1.0.0/24"]: Refreshing state... [id=rtb-0fffae9ac04b39beb][0m
+[0m[1mmodule.service-network.aws_subnet.all["10.1.2.0/24"]: Refreshing state... [id=subnet-0204ea6db2cfe1d8b][0m
+[0m[1mmodule.service-network.aws_subnet.all["10.1.3.0/24"]: Refreshing state... [id=subnet-05da1a2e32733891b][0m
+[0m[1mmodule.service-network.aws_subnet.all["10.1.0.0/24"]: Refreshing state... [id=subnet-0e4f197ecc2e1b067][0m
+[0m[1mmodule.service-network.aws_route.default_main: Refreshing state... [id=r-rtb-08b2d84d89315e2931080289494][0m
+[0m[1mmodule.service-network.aws_nat_gateway.nat_gw["10.1.0.0/24"]: Refreshing state... [id=nat-0711deee991aead94][0m
+[0m[1mmodule.service-network.aws_nat_gateway.nat_gw["10.1.1.0/24"]: Refreshing state... [id=nat-0ac7ad9770a7e22e6][0m
+[0m[1mmodule.service-network.aws_route_table_association.private_rt_assoc["10.1.3.0/24"]: Refreshing state... [id=rtbassoc-03e29b1d4752cc364][0m
+[0m[1mmodule.service-network.aws_route_table_association.private_rt_assoc["10.1.0.0/24"]: Refreshing state... [id=rtbassoc-0c73215aa9095999f][0m
+[0m[1mmodule.service-network.aws_route_table_association.private_rt_assoc["10.1.1.0/24"]: Refreshing state... [id=rtbassoc-07f2319f38acae764][0m
+[0m[1mmodule.service-network.aws_route.subnet_public["10.1.1.0/24"]: Refreshing state... [id=r-rtb-0df4dcefedafb92991080289494][0m
+[0m[1mmodule.service-network.aws_route.subnet_public["10.1.0.0/24"]: Refreshing state... [id=r-rtb-0fffae9ac04b39beb1080289494][0m
+[0m[1mmodule.service-network.aws_route_table_association.private_rt_assoc["10.1.2.0/24"]: Refreshing state... [id=rtbassoc-0ed352a396facc8c4][0m
+[0m[1mmodule.service-network.aws_route.subnet_private["10.1.3.0/24"]: Refreshing state... [id=r-rtb-0fafe25527f02c7791080289494][0m
+[0m[1mmodule.service-network.aws_route.subnet_private["10.1.2.0/24"]: Refreshing state... [id=r-rtb-086b2dc47a055ca861080289494][0m
+[0m[1mdata.aws_route53_zone.cicd: Read complete after 1s [id=Z06790082OU0POPWOCPZ4][0m
+[0m[1mmodule.test.data.aws_route53_zone.jumphost_zone: Reading...[0m[0m
+[0m[1mmodule.test.data.aws_route53_zone.jumphost_zone: Read complete after 1s [id=Z06790082OU0POPWOCPZ4][0m
+[0m[1mmodule.test.data.aws_iam_policy.AWSLambdaBasicExecutionRole: Read complete after 4s [id=arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+ [36m<=[0m read (data resources)[0m
+
+Terraform will perform the following actions:
+
+[1m  # module.test.data.archive_file.lambda[0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "archive_file" "lambda" {
+      [32m+[0m[0m excludes            = [
+          [32m+[0m[0m "__pycache__",
+        ]
+      [32m+[0m[0m id                  = (known after apply)
+      [32m+[0m[0m output_base64sha256 = (known after apply)
+      [32m+[0m[0m output_base64sha512 = (known after apply)
+      [32m+[0m[0m output_md5          = (known after apply)
+      [32m+[0m[0m output_path         = (known after apply)
+      [32m+[0m[0m output_sha          = (known after apply)
+      [32m+[0m[0m output_sha256       = (known after apply)
+      [32m+[0m[0m output_sha512       = (known after apply)
+      [32m+[0m[0m output_size         = (known after apply)
+      [32m+[0m[0m source_dir          = "../../update_dns"
+      [32m+[0m[0m type                = "zip"
+    }
+
+[1m  # module.test.data.aws_iam_policy_document.lambda-permissions[0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "aws_iam_policy_document" "lambda-permissions" {
+      [32m+[0m[0m id   = (known after apply)
+      [32m+[0m[0m json = (known after apply)
+
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions   = [
+              [32m+[0m[0m "autoscaling:CompleteLifecycleAction",
+            ]
+          [32m+[0m[0m resources = [
+              [32m+[0m[0m (known after apply),
+            ]
+        }
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions   = [
+              [32m+[0m[0m "ec2:DescribeInstances",
+              [32m+[0m[0m "ec2:DescribeTags",
+            ]
+          [32m+[0m[0m resources = [
+              [32m+[0m[0m "*",
+            ]
+        }
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions   = [
+              [32m+[0m[0m "ec2:CreateTags",
+            ]
+          [32m+[0m[0m resources = [
+              [32m+[0m[0m "arn:aws:ec2:*:303467602807:instance/*",
+            ]
+        }
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions   = [
+              [32m+[0m[0m "route53:ChangeResourceRecordSets",
+              [32m+[0m[0m "route53:ListResourceRecordSets",
+            ]
+          [32m+[0m[0m resources = [
+              [32m+[0m[0m "arn:aws:route53:::hostedzone/Z06790082OU0POPWOCPZ4",
+            ]
+        }
+    }
+
+[1m  # module.test.data.aws_iam_policy_document.lambda_logging[0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "aws_iam_policy_document" "lambda_logging" {
+      [32m+[0m[0m id   = (known after apply)
+      [32m+[0m[0m json = (known after apply)
+
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions   = [
+              [32m+[0m[0m "logs:CreateLogStream",
+            ]
+          [32m+[0m[0m effect    = "Allow"
+          [32m+[0m[0m resources = [
+              [32m+[0m[0m (known after apply),
+            ]
+        }
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions   = [
+              [32m+[0m[0m "logs:PutLogEvents",
+            ]
+          [32m+[0m[0m effect    = "Allow"
+          [32m+[0m[0m resources = [
+              [32m+[0m[0m "arn:aws:logs:us-west-1:303467602807:log-group:*:log-stream:*",
+            ]
+        }
+    }
+
+[1m  # module.test.aws_autoscaling_group.jumphost[0m will be created
+[0m  [32m+[0m[0m resource "aws_autoscaling_group" "jumphost" {
+      [32m+[0m[0m arn                              = (known after apply)
+      [32m+[0m[0m availability_zones               = (known after apply)
+      [32m+[0m[0m default_cooldown                 = (known after apply)
+      [32m+[0m[0m desired_capacity                 = (known after apply)
+      [32m+[0m[0m force_delete                     = false
+      [32m+[0m[0m force_delete_warm_pool           = false
+      [32m+[0m[0m health_check_grace_period        = 300
+      [32m+[0m[0m health_check_type                = (known after apply)
+      [32m+[0m[0m id                               = (known after apply)
+      [32m+[0m[0m ignore_failed_scaling_activities = false
+      [32m+[0m[0m load_balancers                   = (known after apply)
+      [32m+[0m[0m max_instance_lifetime            = 7776000
+      [32m+[0m[0m max_size                         = 3
+      [32m+[0m[0m metrics_granularity              = "1Minute"
+      [32m+[0m[0m min_size                         = 1
+      [32m+[0m[0m name                             = (known after apply)
+      [32m+[0m[0m name_prefix                      = "jumphost-"
+      [32m+[0m[0m predicted_capacity               = (known after apply)
+      [32m+[0m[0m protect_from_scale_in            = false
+      [32m+[0m[0m service_linked_role_arn          = (known after apply)
+      [32m+[0m[0m target_group_arns                = (known after apply)
+      [32m+[0m[0m vpc_zone_identifier              = [
+          [32m+[0m[0m "subnet-025cdc57f4b0ae420",
+          [32m+[0m[0m "subnet-0e4f197ecc2e1b067",
+        ]
+      [32m+[0m[0m wait_for_capacity_timeout        = "10m"
+      [32m+[0m[0m warm_pool_size                   = (known after apply)
+
+      [32m+[0m[0m instance_refresh {
+          [32m+[0m[0m strategy = "Rolling"
+
+          [32m+[0m[0m preferences {
+              [32m+[0m[0m min_healthy_percentage       = 100
+              [32m+[0m[0m scale_in_protected_instances = "Ignore"
+              [32m+[0m[0m skip_matching                = false
+              [32m+[0m[0m standby_instances            = "Ignore"
+            }
+        }
+
+      [32m+[0m[0m launch_template {
+          [32m+[0m[0m id      = (known after apply)
+          [32m+[0m[0m name    = (known after apply)
+          [32m+[0m[0m version = (known after apply)
+        }
+
+      [32m+[0m[0m tag {
+          [32m+[0m[0m key                 = "Name"
+          [32m+[0m[0m propagate_at_launch = true
+          [32m+[0m[0m value               = "jumphost"
+        }
+    }
+
+[1m  # module.test.aws_autoscaling_lifecycle_hook.launching[0m will be created
+[0m  [32m+[0m[0m resource "aws_autoscaling_lifecycle_hook" "launching" {
+      [32m+[0m[0m autoscaling_group_name = (known after apply)
+      [32m+[0m[0m default_result         = "ABANDON"
+      [32m+[0m[0m heartbeat_timeout      = 300
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m lifecycle_transition   = "autoscaling:EC2_INSTANCE_LAUNCHING"
+      [32m+[0m[0m name                   = "launching"
+    }
+
+[1m  # module.test.aws_autoscaling_lifecycle_hook.terminating[0m will be created
+[0m  [32m+[0m[0m resource "aws_autoscaling_lifecycle_hook" "terminating" {
+      [32m+[0m[0m autoscaling_group_name = (known after apply)
+      [32m+[0m[0m default_result         = "ABANDON"
+      [32m+[0m[0m heartbeat_timeout      = 300
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m lifecycle_transition   = "autoscaling:EC2_INSTANCE_TERMINATING"
+      [32m+[0m[0m name                   = "terminating"
+    }
+
+[1m  # module.test.aws_cloudwatch_event_rule.scale[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_event_rule" "scale" {
+      [32m+[0m[0m arn            = (known after apply)
+      [32m+[0m[0m description    = "Jumphost ASG lifecycle hook"
+      [32m+[0m[0m event_bus_name = "default"
+      [32m+[0m[0m event_pattern  = (known after apply)
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m is_enabled     = true
+      [32m+[0m[0m name           = (known after apply)
+      [32m+[0m[0m name_prefix    = "jumphost-scale"
+      [32m+[0m[0m tags_all       = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+    }
+
+[1m  # module.test.aws_cloudwatch_event_target.scale-out[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_event_target" "scale-out" {
+      [32m+[0m[0m arn            = (known after apply)
+      [32m+[0m[0m event_bus_name = "default"
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m rule           = (known after apply)
+      [32m+[0m[0m target_id      = (known after apply)
+    }
+
+[1m  # module.test.aws_cloudwatch_log_group.update_dns[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_log_group" "update_dns" {
+      [32m+[0m[0m arn               = (known after apply)
+      [32m+[0m[0m id                = (known after apply)
+      [32m+[0m[0m name              = "/aws/lambda/update_dns"
+      [32m+[0m[0m name_prefix       = (known after apply)
+      [32m+[0m[0m retention_in_days = 14
+      [32m+[0m[0m skip_destroy      = false
+      [32m+[0m[0m tags_all          = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+    }
+
+[1m  # module.test.aws_iam_policy.lambda_logging[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "lambda_logging" {
+      [32m+[0m[0m arn         = (known after apply)
+      [32m+[0m[0m description = "IAM policy for logging from a lambda"
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = (known after apply)
+      [32m+[0m[0m name_prefix = "lambda_logging"
+      [32m+[0m[0m path        = "/"
+      [32m+[0m[0m policy      = (known after apply)
+      [32m+[0m[0m policy_id   = (known after apply)
+      [32m+[0m[0m tags_all    = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+    }
+
+[1m  # module.test.aws_iam_policy.lambda_permissions[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "lambda_permissions" {
+      [32m+[0m[0m arn         = (known after apply)
+      [32m+[0m[0m description = "IAM policy for a lambda permissions"
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = (known after apply)
+      [32m+[0m[0m name_prefix = "lambda_permissions"
+      [32m+[0m[0m path        = "/"
+      [32m+[0m[0m policy      = (known after apply)
+      [32m+[0m[0m policy_id   = (known after apply)
+      [32m+[0m[0m tags_all    = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+    }
+
+[1m  # module.test.aws_iam_role.iam_for_lambda[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "iam_for_lambda" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "lambda.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "iam_for_lambda"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+    }
+
+[1m  # module.test.aws_iam_role_policy_attachment.AWSLambdaBasicExecutionRole[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "AWSLambdaBasicExecutionRole" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      [32m+[0m[0m role       = "iam_for_lambda"
+    }
+
+[1m  # module.test.aws_iam_role_policy_attachment.lambda_logs[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "lambda_logs" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "iam_for_lambda"
+    }
+
+[1m  # module.test.aws_iam_role_policy_attachment.lambda_permissions[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "lambda_permissions" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "iam_for_lambda"
+    }
+
+[1m  # module.test.aws_lambda_function.update_dns[0m will be created
+[0m  [32m+[0m[0m resource "aws_lambda_function" "update_dns" {
+      [32m+[0m[0m architectures                  = (known after apply)
+      [32m+[0m[0m arn                            = (known after apply)
+      [32m+[0m[0m function_name                  = "update_dns"
+      [32m+[0m[0m handler                        = "main.lambda_handler"
+      [32m+[0m[0m id                             = (known after apply)
+      [32m+[0m[0m invoke_arn                     = (known after apply)
+      [32m+[0m[0m last_modified                  = (known after apply)
+      [32m+[0m[0m memory_size                    = 128
+      [32m+[0m[0m package_type                   = "Zip"
+      [32m+[0m[0m publish                        = false
+      [32m+[0m[0m qualified_arn                  = (known after apply)
+      [32m+[0m[0m qualified_invoke_arn           = (known after apply)
+      [32m+[0m[0m reserved_concurrent_executions = -1
+      [32m+[0m[0m role                           = (known after apply)
+      [32m+[0m[0m runtime                        = "python3.9"
+      [32m+[0m[0m s3_bucket                      = (known after apply)
+      [32m+[0m[0m s3_key                         = (known after apply)
+      [32m+[0m[0m signing_job_arn                = (known after apply)
+      [32m+[0m[0m signing_profile_version_arn    = (known after apply)
+      [32m+[0m[0m skip_destroy                   = false
+      [32m+[0m[0m source_code_hash               = (known after apply)
+      [32m+[0m[0m source_code_size               = (known after apply)
+      [32m+[0m[0m tags_all                       = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+      [32m+[0m[0m timeout                        = 30
+      [32m+[0m[0m version                        = (known after apply)
+
+      [32m+[0m[0m environment {
+          [32m+[0m[0m variables = {
+              [32m+[0m[0m "ROUTE53_HOSTNAME"  = "upright-possum"
+              [32m+[0m[0m "ROUTE53_TTL"       = "300"
+              [32m+[0m[0m "ROUTE53_ZONE_ID"   = "Z06790082OU0POPWOCPZ4"
+              [32m+[0m[0m "ROUTE53_ZONE_NAME" = "ci-cd.infrahouse.com"
+            }
+        }
+    }
+
+[1m  # module.test.aws_lambda_function_event_invoke_config.update_dns[0m will be created
+[0m  [32m+[0m[0m resource "aws_lambda_function_event_invoke_config" "update_dns" {
+      [32m+[0m[0m function_name          = "update_dns"
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m maximum_retry_attempts = 0
+    }
+
+[1m  # module.test.aws_lambda_permission.allow_cloudwatch[0m will be created
+[0m  [32m+[0m[0m resource "aws_lambda_permission" "allow_cloudwatch" {
+      [32m+[0m[0m action              = "lambda:InvokeFunction"
+      [32m+[0m[0m function_name       = "update_dns"
+      [32m+[0m[0m id                  = (known after apply)
+      [32m+[0m[0m principal           = "events.amazonaws.com"
+      [32m+[0m[0m source_arn          = (known after apply)
+      [32m+[0m[0m statement_id        = "AllowExecutionFromCloudWatch-out"
+      [32m+[0m[0m statement_id_prefix = (known after apply)
+    }
+
+[1m  # module.test.aws_launch_template.jumphost[0m will be created
+[0m  [32m+[0m[0m resource "aws_launch_template" "jumphost" {
+      [32m+[0m[0m arn             = (known after apply)
+      [32m+[0m[0m default_version = (known after apply)
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m image_id        = "ami-0f324e1cd5c4465c8"
+      [32m+[0m[0m instance_type   = "t3a.micro"
+      [32m+[0m[0m key_name        = "terraform-20231101184650247400000001"
+      [32m+[0m[0m latest_version  = (known after apply)
+      [32m+[0m[0m name            = (known after apply)
+      [32m+[0m[0m name_prefix     = "jumphost-"
+      [32m+[0m[0m tags_all        = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+      [32m+[0m[0m user_data       = "Q29udGVudC1UeXBlOiBtdWx0aXBhcnQvbWl4ZWQ7IGJvdW5kYXJ5PSJNSU1FQk9VTkRBUlkiCk1JTUUtVmVyc2lvbjogMS4wDQoNCi0tTUlNRUJPVU5EQVJZDQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiA3Yml0DQpDb250ZW50LVR5cGU6IHRleHQvY2xvdWQtY29uZmlnDQpNaW1lLVZlcnNpb246IDEuMA0KDQojY2xvdWQtY29uZmlnCiJhcHQiOgogICJzb3VyY2VzIjoKICAgICJpbmZyYWhvdXNlIjoKICAgICAgImtleSI6IHwKICAgICAgICAtLS0tLUJFR0lOIFBHUCBQVUJMSUMgS0VZIEJMT0NLLS0tLS0KCiAgICAgICAgbVFJTkJHUzdGdGtCRUFERitZbURnNlF2c3Y1VjZaUXcrUWh4ZFR2ak1YZUxDOVQ2UkZSVkQ5NDdxS3p0Tk5RbgogICAgICAgICtBL3l4cHJMQW1XMjVVdS8xMW9Dc3pOVklJYVIzT1k4TXR5aWxiQ3R6VWtCenZXZGxYM0h2VHc5MUxwOGJ4VUwKICAgICAgICBFWE9NOW5zY3FPck92ZkJqYW5wbEtERUtQTVk2dklaM2twMXJVc0NOR0xCTDB4MktaZ1U4MHVsUnNNTThxbkJOCiAgICAgICAga3BUaUFlWEtPRVZ0UnpsV2x2T0ZMSjdwWUR2YVowVWdIU1Z1RStaa2xkcU9kTExScEtrZEl2SlBja1hxTDV4VAogICAgICAgIFV2V1RXMWVuRkFIZDUrTlF4TW5DYTNpa2pRVjNEVGxFanNnTExRYmJ5c1hqWFByNlBJUHMyOWNUY2ZvcTQzMU8KICAgICAgICB0UjREclpCNHZNRU9BODhUbUtCa0VpTUcraUI5Y2p6NXdCSXVNdTk1Wm1vSnhkdmpQUjcyRllLZ3JDWE50TmhkCiAgICAgICAgVmVyRVJ2cExUaGRhUm1aZ2k3bHkrRHZrWTdMcXlKUHZkSGNxeGVkZ0ZuUEtSNFQrZ1NRbWJVUGQ5cXFkSlIwUQogICAgICAgIEtsL1BtdHVTL3c5Z3kyWjRheTBRSUtyTkJ6UXhoQThMRFpwcDFydWZDSjUrWk1lZjkwdkhwd3hNK09hUHJ5TmwKICAgICAgICBFZERXN1lROGZ1QjVuUHFqd1VBcG1sWVlMSllsZDd2Sjc5RUl4L3NqZ2g2RytJRmltN3hSN1dpUUYvbkpldmZxCiAgICAgICAgdnpZTzdvci9HSUNiNmVad3ZQZHR5NzlIbVZlUHFFVGxEVTAwb3lvcFd5VHNZeVNZRFNIbi80ZG9UdXg4ditGLwogICAgICAgIFlleWJ2Z3FicmlIN2lTRjhIeHdFRmVEanJNdFVUSHNYQzM1REhGZU1DaEpveHN5S3Y0OEorYklHRndBUkFRQUIKICAgICAgICB0QzFKYm1aeVlVaHZkWE5sSUZCaFkydGhaMlZ5SUR4d1lXTnJZV2RsY2tCcGJtWnlZV2h2ZFhObExtTnZiVDZKCiAgICAgICAgQWxRRUV3RUtBRDRXSVFTaU5oNWtZM3c4VzBnQUY4WGd1SmFveGZjRDd3VUNaTHNXMlFJYkF3VUpBOEpuQUFVTAogICAgICAgIENRZ0hBZ1lWQ2drSUN3SUVGZ0lEQVFJZUFRSVhnQUFLQ1JEZ3VKYW94ZmNEN3diN0QvOWVuYnRPMURFUW4xUHQKICAgICAgICBoZ2t0SCtJcmJCZFlSSGs3MWlsMmhibm1BYm9Ma2sxYWsvYWFRWS9YUURKRmhyQTdqTWtQTE9DUmVvdEhpUW12CiAgICAgICAgMVVmcURjTTJlUTQveDBOOUYyRExVU2t1d3cxMTd2dHRVb0J4aXJCNzJwTzBUL2xkOW8zOVNITUMvRGZrNnk2aAogICAgICAgIHRUR3F4TGdoOGozRFN5TzVFRXJKTGEvM0J2TXFyNGlxYjNQVHdOZURSRWphdlFKaFhTdkVGanlBQ29vOWQ3cnMKICAgICAgICA3bGhDYmJTUGpnVGNHL1BDZnpMcjM3UXl6WGlUUi9Ud2ppd1ZkVGhkQ1MvQ0tuc29NOG5nSHhqWFlwSzdNNndnCiAgICAgICAgdHpBOEprSFpyNU1wa3JQR3JnUWV2aEpCTGtIUi9qY3NhYUJaTjdudzhhZUhjd3dNNC9DaEhJeVpkUTkxMDU5cAogICAgICAgIE9NYVltV21qUFFmcTFyT25BQXZBMXhXdytUWk56SGdXSXE0dnVzeDdPQnZyRnNWZVpOc3FkN09hNHBydFZXZzAKICAgICAgICA5MWNLWkpvL092Nm9wTS93RFdOMnlCbmttQkN3YVhwb0g1TkRRMjJiaG5HVEplSVdkZWk4VVNHcHZCa1R4QkkyCiAgICAgICAgWDMycHlPbVpEbjgxTDJ6TTJpb052Z1hJYjV1NXRqYjlOT2lBdDZvVzBHMHgwMGRncjNyNnB1OHFtTXdrQlZCQwogICAgICAgIHZXd0VtYXhRbmtUaG5iQWQ1N1ZiYXQ0Ly91RGNIRnBEYUJQcEZXZUNMMmRmRFNyUzlpaUs2SzFWa3ZHTG9YaDgKICAgICAgICBNcEpxam9kZHBmTmg0dXlmekt5TkUxZHJRMjltY3dmSWx6WG9QcmIwOVc2WkhwbSt0cWQ4TWs3MDd6d3NkRkdSCiAgICAgICAgcVJzeG10UG45SjFyZVlaaVZ1RTVHMjZmMWFLVFI3a0NEUVJrdXhiWkFSQUE0KzlrbjRzbUJYWmNNMHZGcTlSOAogICAgICAgIDI0WEtadFRhVm1Wb1ZKTVJRTTQ0cVdSK3MvUzBNenZiTzV1MGNTVlRoWTY1WXpNTHM5MjBVWTZ1R3BvUzJaWXcKICAgICAgICBJTWlwa2FCKzJGNkI4UjdWN25sL1NnYVhHYTJNZXhrQzd3dDZibEZiYXc3cGJ2SStpSTl3UzhCS0hnTUR6ZDBGCiAgICAgICAgVGpTcTl2ZGtWa2Y3eUkzaEV3bGxYN3pUNklMT3Zrbk5HYm9zMGRGSTkyY0JXUXMraVhQNTB4RFZpdDMrOW1DRAogICAgICAgIHJ1V1ZZazczbXZTRXpGY3VYQ3liS0o1VS9uelNRNzBKb1FtU1BjNTBSUWp1SEdkemwvWXpHRmFGbjV6SVo1cFAKICAgICAgICBrNVMrS1RZZWt6Y2lSa0h6YmVhNVBqK0E2S1ppbEtqNXlrQVJGencrQ1B4cXN1ZWpEa2k3QSthM20zV0dxK21tCiAgICAgICAgQWtsUTRZQmNvbHpOT3BnV2NsSVN1RTNkNWtndGFKQUNJZ3RlODdGNlFCQnNrOG9EQkZRQ25abW9PaXJsU2xiZgogICAgICAgIEp1RDZmVkNKdTJ6WTdUaE4xTzBvV1R3QWFOQXZNNTVDTFR2NnMzRm10UjkybG5sUURGdUorZmo4NjNjNnF4MTQKICAgICAgICBGdU80bU03ZXVTMDh3R2dWR205MXdBN2JZbDRhaHhDNlMyQkdCNUZ2a1pmekJCd2pzZm1VV0hBdTdWUlpKeGtYCiAgICAgICAgSnA2OTZPVGRSM1JmSTdJWjZPVzZ0R0VMaWpzd1diYlpYYjVYUldFVzk5dldPN05JSzZzT3ZoTUROcDliU011YgogICAgICAgIFhQM1BiUHhneVQwYm1zczB5d05Zd3VjbmZjbURYcVBWdTNHZHQ1M2F0MStoSzdtbG5RM3VVczVlVkVPSUhuSm0KICAgICAgICBmMXRyRGdnU1RFN2Zua3g2Q3psK2lNa0FFUUVBQVlrQ1BBUVlBUW9BSmhZaEJLSTJIbVJqZkR4YlNBQVh4ZUM0CiAgICAgICAgbHFqRjl3UHZCUUprdXhiWkFoc01CUWtEd21jQUFBb0pFT0M0bHFqRjl3UHY4U1FQL2pzUWZKQ1VIcmpwWDRmUAogICAgICAgIDBOdFZ5cWxDcnExT21MUDdCTHJYckN4b0FGUmI2NFlKVWRXazVQMzVrOXdqMkJRanBqY05qMmlrODBGb28wMkUKICAgICAgICB5YytQelcvNHR6VnZkeFJyRXpzT0ZtK21NUitsbFVIQUt6QmE2UUJ4SFQwb2ZMN3A1WFlUdU1ObllvK1BqVk1tCiAgICAgICAgalAzVEVKR1lYWW11aEdmYWFKWnBqTG1KRnFwNTl4Ly9kc01IZUxxVUNod2I2Q2c2RHVrQWloZUFzM1ArclhvMwogICAgICAgIHRCbkE0SkNDaVhSNy8vMFdlelJvU1BkYWxOZW00dnM4UFQ4N3NuSGJEbGlGTVZmOHcrZmtzSW5xdm90aVJESTQKICAgICAgICBRQnJCZnMzTmRlWlcvdG11cE9hWkpSekhEdnZLYmcvL082aXAxYVB2SUxXdlRETThLY1FDUUVTYVdrQ2JJMXVjCiAgICAgICAgcml6QU1ibFRCMmd5dzl5b2pDcFZDTUJYZGl6QXFxeWw1WlZydzQrWC9pMDlJc050OGhBOS81Ulk3djNjN1oyQwogICAgICAgIFh5MnhLV210TEk5bmxPU1N3VXhCNTY2STI5bFZLQkxVbVhtUWZuUklJSENpSkRYWUZEUC82TGZ2OSttaEVXVTgKICAgICAgICBxZWQzeGhwZU5TQUl6QStNVGxqdGlSbW9yeHBkZGlYYnRDYWZjUGwvSjNYMEIwN2ZjY0pad1pzQ1lDcHRMeTFjCiAgICAgICAgeXZWYU4rRUJtam9DcDNqdDZ3TGU0eGNscVUzQUN3ei84VEREbXRKN1VVZGw3TWRraXBRWjI3OEwya3BsNm82MQogICAgICAgIE1GMmZYRDdmWk1lWmZFdzZsdTBCRjVtWjAvY2gzSHhYZVpvWGlmNzlnMjV2Wm1TZFc5N3BjZWV3UGx2bEVURlEKICAgICAgICA1NXBNb3JReVVURVFDUTNFQ3pIWVNuTC9UbVc3CiAgICAgICAgPSswUmMKICAgICAgICAtLS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCiAgICAgICJzb3VyY2UiOiAiZGViIFtzaWduZWQtYnk9JEtFWV9GSUxFXSBodHRwczovL3JlbGVhc2UtamFtbXkuaW5mcmFob3VzZS5jb20vICRSRUxFQVNFCiAgICAgICAgbWFpbiIKInBhY2thZ2VfdXBkYXRlIjogdHJ1ZQoicGFja2FnZXMiOgotICJwdXBwZXQtY29kZSIKLSAiaW5mcmFob3VzZS10b29sa2l0IgoicHVwcGV0IjoKICAiY29sbGVjdGlvbiI6ICJwdXBwZXQ4IgogICJpbnN0YWxsIjogdHJ1ZQogICJpbnN0YWxsX3R5cGUiOiAiYWlvIgogICJwYWNrYWdlX25hbWUiOiAicHVwcGV0LWFnZW50IgogICJzdGFydF9zZXJ2aWNlIjogZmFsc2UKInJ1bmNtZCI6Ci0gLSAiaWgtcHVwcGV0IgogIC0gIi0tZGVidWciCiAgLSAiYXBwbHkiCiJ3cml0ZV9maWxlcyI6Ci0gImNvbnRlbnQiOiB8LQogICAgW2RlZmF1bHRdCiAgICByZWdpb249dXMtd2VzdC0xCiAgInBhdGgiOiAiL3Jvb3QvLmF3cy9jb25maWciCiAgInBlcm1pc3Npb25zIjogIjA2MDAiCi0gImNvbnRlbnQiOiB8CiAgICAicHVwcGV0X2Vudmlyb25tZW50IjogIiIKICAgICJwdXBwZXRfcm9sZSI6ICJqdW1waG9zdCIKICAicGF0aCI6ICIvZXRjL3B1cHBldGxhYnMvZmFjdGVyL2ZhY3RzLmQvcHVwcGV0LnlhbWwiCiAgInBlcm1pc3Npb25zIjogIjA2NDQiCg0KLS1NSU1FQk9VTkRBUlktLQ0K"
+
+      [32m+[0m[0m iam_instance_profile {
+          [32m+[0m[0m arn = (known after apply)
+        }
+    }
+
+[1m  # module.test.aws_s3_bucket.lambda_tmp[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket" "lambda_tmp" {
+      [32m+[0m[0m acceleration_status         = (known after apply)
+      [32m+[0m[0m acl                         = (known after apply)
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m bucket                      = (known after apply)
+      [32m+[0m[0m bucket_domain_name          = (known after apply)
+      [32m+[0m[0m bucket_prefix               = "infrahouse-jumphost-lambda-"
+      [32m+[0m[0m bucket_regional_domain_name = (known after apply)
+      [32m+[0m[0m force_destroy               = false
+      [32m+[0m[0m hosted_zone_id              = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m object_lock_enabled         = (known after apply)
+      [32m+[0m[0m policy                      = (known after apply)
+      [32m+[0m[0m region                      = (known after apply)
+      [32m+[0m[0m request_payer               = (known after apply)
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+      [32m+[0m[0m website_domain              = (known after apply)
+      [32m+[0m[0m website_endpoint            = (known after apply)
+    }
+
+[1m  # module.test.aws_s3_bucket_public_access_block.public_access[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket_public_access_block" "public_access" {
+      [32m+[0m[0m block_public_acls       = true
+      [32m+[0m[0m block_public_policy     = true
+      [32m+[0m[0m bucket                  = (known after apply)
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m ignore_public_acls      = true
+      [32m+[0m[0m restrict_public_buckets = true
+    }
+
+[1m  # module.test.aws_s3_object.lambda_package[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_object" "lambda_package" {
+      [32m+[0m[0m acl                    = (known after apply)
+      [32m+[0m[0m bucket                 = (known after apply)
+      [32m+[0m[0m bucket_key_enabled     = (known after apply)
+      [32m+[0m[0m checksum_crc32         = (known after apply)
+      [32m+[0m[0m checksum_crc32c        = (known after apply)
+      [32m+[0m[0m checksum_sha1          = (known after apply)
+      [32m+[0m[0m checksum_sha256        = (known after apply)
+      [32m+[0m[0m content_type           = (known after apply)
+      [32m+[0m[0m etag                   = (known after apply)
+      [32m+[0m[0m force_destroy          = false
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m key                    = (known after apply)
+      [32m+[0m[0m kms_key_id             = (known after apply)
+      [32m+[0m[0m server_side_encryption = (known after apply)
+      [32m+[0m[0m source                 = (known after apply)
+      [32m+[0m[0m storage_class          = (known after apply)
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+      [32m+[0m[0m version_id             = (known after apply)
+    }
+
+[1m  # module.test.null_resource.install_python_dependencies[0m will be created
+[0m  [32m+[0m[0m resource "null_resource" "install_python_dependencies" {
+      [32m+[0m[0m id       = (known after apply)
+      [32m+[0m[0m triggers = {
+          [32m+[0m[0m "dependencies_version" = "715a0f7310ae4dabf9b710802339dcd5"
+          [32m+[0m[0m "main_version"         = "ff492ff0bab9c80216ea41aa46bf1fd2"
+        }
+    }
+
+[1m  # module.test.random_uuid.lamda_src_hash[0m will be created
+[0m  [32m+[0m[0m resource "random_uuid" "lamda_src_hash" {
+      [32m+[0m[0m id      = (known after apply)
+      [32m+[0m[0m keepers = {
+          [32m+[0m[0m "main.py"          = "ff492ff0bab9c80216ea41aa46bf1fd2"
+          [32m+[0m[0m "requirements.txt" = "715a0f7310ae4dabf9b710802339dcd5"
+        }
+      [32m+[0m[0m result  = (known after apply)
+    }
+
+[1m  # module.test.module.jumphost_profile.aws_iam_instance_profile.profile[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_instance_profile" "profile" {
+      [32m+[0m[0m arn         = (known after apply)
+      [32m+[0m[0m create_date = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = "jumphost"
+      [32m+[0m[0m name_prefix = (known after apply)
+      [32m+[0m[0m path        = "/"
+      [32m+[0m[0m role        = (known after apply)
+      [32m+[0m[0m tags_all    = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+      [32m+[0m[0m unique_id   = (known after apply)
+    }
+
+[1m  # module.test.module.jumphost_profile.aws_iam_policy.profile[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "profile" {
+      [32m+[0m[0m arn         = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = (known after apply)
+      [32m+[0m[0m name_prefix = "jumphost"
+      [32m+[0m[0m path        = "/"
+      [32m+[0m[0m policy      = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = "ec2:Describe*"
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m policy_id   = (known after apply)
+      [32m+[0m[0m tags_all    = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+    }
+
+[1m  # module.test.module.jumphost_profile.aws_iam_role.profile[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "profile" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = (known after apply)
+      [32m+[0m[0m name_prefix           = "jumphost"
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "created_by" = "infrahouse/terraform-aws-jumphost"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+    }
+
+[1m  # module.test.module.jumphost_profile.aws_iam_role_policy_attachment.profile[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "profile" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = (known after apply)
+    }
+
+[1mPlan:[0m 25 to add, 0 to change, 0 to destroy.
+[0m[0m[1mmodule.test.null_resource.install_python_dependencies: Creating...[0m[0m
+[0m[1mmodule.test.random_uuid.lamda_src_hash: Creating...[0m[0m
+[0m[1mmodule.test.null_resource.install_python_dependencies: Provisioning with 'local-exec'...[0m[0m
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mExecuting: ["/bin/sh" "-c" "bash ../../package_update_dns.sh"]
+[0m[1mmodule.test.random_uuid.lamda_src_hash: Creation complete after 0s [id=718ab07d-2a3b-87f4-e05b-d14a793ff622][0m
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m+ mkdir -p ../../update_dns
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m+ pip install --target ../../update_dns -r ../../update_dns/requirements.txt --upgrade
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mCollecting boto3~=1.28 (from -r ../../update_dns/requirements.txt (line 1))
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m  Using cached boto3-1.28.76-py3-none-any.whl.metadata (6.7 kB)
+[0m[1mmodule.test.module.jumphost_profile.aws_iam_policy.profile: Creating...[0m[0m
+[0m[1mmodule.test.aws_iam_role.iam_for_lambda: Creating...[0m[0m
+[0m[1mmodule.test.module.jumphost_profile.aws_iam_role.profile: Creating...[0m[0m
+[0m[1mmodule.test.aws_s3_bucket.lambda_tmp: Creating...[0m[0m
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mCollecting botocore~=1.31 (from -r ../../update_dns/requirements.txt (line 2))
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m  Using cached botocore-1.31.76-py3-none-any.whl.metadata (6.1 kB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mCollecting jmespath<2.0.0,>=0.7.1 (from boto3~=1.28->-r ../../update_dns/requirements.txt (line 1))
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m  Using cached jmespath-1.0.1-py3-none-any.whl (20 kB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mCollecting s3transfer<0.8.0,>=0.7.0 (from boto3~=1.28->-r ../../update_dns/requirements.txt (line 1))
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m  Using cached s3transfer-0.7.0-py3-none-any.whl.metadata (1.8 kB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mCollecting python-dateutil<3.0.0,>=2.1 (from botocore~=1.31->-r ../../update_dns/requirements.txt (line 2))
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m  Using cached python_dateutil-2.8.2-py2.py3-none-any.whl (247 kB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mCollecting urllib3<1.27,>=1.25.4 (from botocore~=1.31->-r ../../update_dns/requirements.txt (line 2))
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m  Using cached urllib3-1.26.18-py2.py3-none-any.whl.metadata (48 kB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mCollecting six>=1.5 (from python-dateutil<3.0.0,>=2.1->botocore~=1.31->-r ../../update_dns/requirements.txt (line 2))
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m  Using cached six-1.16.0-py2.py3-none-any.whl (11 kB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mUsing cached boto3-1.28.76-py3-none-any.whl (135 kB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mUsing cached botocore-1.31.76-py3-none-any.whl (11.3 MB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mUsing cached s3transfer-0.7.0-py3-none-any.whl (79 kB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mUsing cached urllib3-1.26.18-py2.py3-none-any.whl (143 kB)
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mInstalling collected packages: urllib3, six, jmespath, python-dateutil, botocore, s3transfer, boto3
+[0m[1mmodule.test.module.jumphost_profile.aws_iam_policy.profile: Creation complete after 1s [id=arn:aws:iam::303467602807:policy/jumphost20231101231754145800000001][0m
+[0m[1mmodule.test.aws_iam_role.iam_for_lambda: Creation complete after 1s [id=iam_for_lambda][0m
+[0m[1mmodule.test.module.jumphost_profile.aws_iam_role.profile: Creation complete after 1s [id=jumphost20231101231754145900000002][0m
+[0m[1mmodule.test.aws_iam_role_policy_attachment.AWSLambdaBasicExecutionRole: Creating...[0m[0m
+[0m[1mmodule.test.module.jumphost_profile.aws_iam_role_policy_attachment.profile: Creating...[0m[0m
+[0m[1mmodule.test.module.jumphost_profile.aws_iam_instance_profile.profile: Creating...[0m[0m
+[0m[1mmodule.test.module.jumphost_profile.aws_iam_role_policy_attachment.profile: Creation complete after 0s [id=jumphost20231101231754145900000002-20231101231754951700000004][0m
+[0m[1mmodule.test.aws_iam_role_policy_attachment.AWSLambdaBasicExecutionRole: Creation complete after 0s [id=iam_for_lambda-20231101231754957300000005][0m
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mSuccessfully installed boto3-1.28.76 botocore-1.31.76 jmespath-1.0.1 python-dateutil-2.8.2 s3transfer-0.7.0 six-1.16.0 urllib3-1.26.18
+[0m[1mmodule.test.module.jumphost_profile.aws_iam_instance_profile.profile: Creation complete after 0s [id=jumphost][0m
+[0m[1mmodule.test.aws_launch_template.jumphost: Creating...[0m[0m
+[0m[1mmodule.test.aws_s3_bucket.lambda_tmp: Creation complete after 2s [id=infrahouse-jumphost-lambda-20231101231754150600000003][0m
+[0m[1mmodule.test.aws_s3_bucket_public_access_block.public_access: Creating...[0m[0m
+[0m[1mmodule.test.aws_launch_template.jumphost: Creation complete after 1s [id=lt-056e5895dfbb3d901][0m
+[0m[1mmodule.test.aws_autoscaling_group.jumphost: Creating...[0m[0m
+[0m[1mmodule.test.aws_s3_bucket_public_access_block.public_access: Creation complete after 0s [id=infrahouse-jumphost-lambda-20231101231754150600000003][0m
+[0m[1mmodule.test.null_resource.install_python_dependencies: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.test.aws_autoscaling_group.jumphost: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.test.null_resource.install_python_dependencies: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.test.aws_autoscaling_group.jumphost: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.test.aws_autoscaling_group.jumphost: Creation complete after 21s [id=jumphost-20231101231755670700000008][0m
+[0m[1mmodule.test.data.aws_iam_policy_document.lambda-permissions: Reading...[0m[0m
+[0m[1mmodule.test.aws_autoscaling_lifecycle_hook.terminating: Creating...[0m[0m
+[0m[1mmodule.test.data.aws_iam_policy_document.lambda-permissions: Read complete after 0s [id=1222642265][0m
+[0m[1mmodule.test.aws_cloudwatch_event_rule.scale: Creating...[0m[0m
+[0m[1mmodule.test.aws_iam_policy.lambda_permissions: Creating...[0m[0m
+[0m[1mmodule.test.aws_autoscaling_lifecycle_hook.terminating: Creation complete after 0s [id=terminating][0m
+[0m[1mmodule.test.aws_cloudwatch_event_rule.scale: Creation complete after 0s [id=jumphost-scale20231101231817077000000009][0m
+[0m[1mmodule.test.aws_iam_policy.lambda_permissions: Creation complete after 0s [id=arn:aws:iam::303467602807:policy/lambda_permissions2023110123181707900000000a][0m
+[0m[1mmodule.test.aws_iam_role_policy_attachment.lambda_permissions: Creating...[0m[0m
+[0m[1mmodule.test.aws_iam_role_policy_attachment.lambda_permissions: Creation complete after 1s [id=iam_for_lambda-2023110123181754780000000b][0m
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0m+ find ../../update_dns -name __pycache__ -exec rm -rv '{}' +
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/bin/__pycache__/jp.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/bin/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/action.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/attr.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/base.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/client.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/collection.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/docstring.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/method.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/resource.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/service.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/subresource.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/utils.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/waiter.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/docs/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/boto3/docs/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/dynamodb/__pycache__/conditions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/dynamodb/__pycache__/table.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/dynamodb/__pycache__/transform.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/dynamodb/__pycache__/types.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/dynamodb/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/boto3/dynamodb/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/ec2/__pycache__/createtags.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/ec2/__pycache__/deletetags.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/ec2/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/boto3/ec2/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/resources/__pycache__/action.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/resources/__pycache__/base.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/resources/__pycache__/collection.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/resources/__pycache__/factory.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/resources/__pycache__/model.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/resources/__pycache__/params.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/resources/__pycache__/response.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/resources/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/boto3/resources/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/s3/__pycache__/inject.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/s3/__pycache__/transfer.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/s3/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/boto3/s3/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/__pycache__/compat.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/__pycache__/exceptions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/__pycache__/session.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/__pycache__/utils.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/boto3/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/boto3/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/crt/__pycache__/auth.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/crt/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/botocore/crt/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/bcdoc/__pycache__/docstringparser.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/bcdoc/__pycache__/restdoc.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/bcdoc/__pycache__/style.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/bcdoc/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/botocore/docs/bcdoc/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/client.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/docstring.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/example.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/method.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/paginator.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/params.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/service.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/shape.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/sharedexample.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/translator.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/utils.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/waiter.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/docs/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/botocore/docs/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/retries/__pycache__/adaptive.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/retries/__pycache__/base.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/retries/__pycache__/bucket.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/retries/__pycache__/quota.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/retries/__pycache__/special.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/retries/__pycache__/standard.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/retries/__pycache__/throttling.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/retries/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/botocore/retries/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/vendored/requests/packages/urllib3/__pycache__/exceptions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/vendored/requests/packages/urllib3/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/botocore/vendored/requests/packages/urllib3/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/vendored/requests/packages/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/botocore/vendored/requests/packages/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/vendored/requests/__pycache__/exceptions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/vendored/requests/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/botocore/vendored/requests/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/vendored/__pycache__/six.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/vendored/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/botocore/vendored/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/args.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/auth.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/awsrequest.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/client.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/compat.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/compress.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/config.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/configloader.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/configprovider.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/credentials.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/discovery.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/endpoint.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/endpoint_provider.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/errorfactory.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/eventstream.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/exceptions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/handlers.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/history.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/hooks.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/httpchecksum.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/httpsession.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/loaders.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/model.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/monitoring.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/paginate.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/parsers.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/regions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/response.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/retryhandler.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/serialize.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/session.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/signers.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/stub.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/tokens.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/translate.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/useragent.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/utils.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/validate.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/waiter.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/botocore/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/botocore/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/parser/__pycache__/isoparser.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/parser/__pycache__/_parser.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/parser/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/dateutil/parser/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/tz/__pycache__/tz.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/tz/__pycache__/win.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/tz/__pycache__/_common.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/tz/__pycache__/_factories.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/tz/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/dateutil/tz/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/zoneinfo/__pycache__/rebuild.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/zoneinfo/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/dateutil/zoneinfo/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/__pycache__/easter.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/__pycache__/relativedelta.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/__pycache__/rrule.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/__pycache__/tzwin.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/__pycache__/utils.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/__pycache__/_common.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/__pycache__/_version.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/dateutil/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/dateutil/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/jmespath/__pycache__/ast.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/jmespath/__pycache__/compat.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/jmespath/__pycache__/exceptions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/jmespath/__pycache__/functions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/jmespath/__pycache__/lexer.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/jmespath/__pycache__/parser.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/jmespath/__pycache__/visitor.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/jmespath/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/jmespath/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/bandwidth.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/compat.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/constants.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/copies.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/crt.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/delete.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/download.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/exceptions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/futures.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/manager.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/processpool.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/subscribers.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/tasks.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/upload.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/utils.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/s3transfer/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/s3transfer/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/_securetransport/__pycache__/bindings.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/_securetransport/__pycache__/low_level.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/_securetransport/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/urllib3/contrib/_securetransport/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/__pycache__/appengine.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/__pycache__/ntlmpool.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/__pycache__/pyopenssl.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/__pycache__/securetransport.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/__pycache__/socks.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/__pycache__/_appengine_environ.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/contrib/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/urllib3/contrib/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/packages/backports/__pycache__/makefile.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/packages/backports/__pycache__/weakref_finalize.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/packages/backports/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/urllib3/packages/backports/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/packages/__pycache__/six.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/packages/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/urllib3/packages/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/connection.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/proxy.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/queue.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/request.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/response.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/retry.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/ssltransport.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/ssl_.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/ssl_match_hostname.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/timeout.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/url.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/wait.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/util/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/urllib3/util/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/connection.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/connectionpool.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/exceptions.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/fields.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/filepost.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/poolmanager.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/request.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/response.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/_collections.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/_version.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/urllib3/__pycache__/__init__.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/urllib3/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved '../../update_dns/__pycache__/six.cpython-38.pyc'
+[0m[1mmodule.test.null_resource.install_python_dependencies (local-exec):[0m [0mremoved directory '../../update_dns/__pycache__'
+[0m[1mmodule.test.null_resource.install_python_dependencies: Creation complete after 29s [id=2936293842430698494][0m
+[0m[1mmodule.test.data.archive_file.lambda: Reading...[0m[0m
+[0m[1mmodule.test.data.archive_file.lambda: Still reading... [10s elapsed][0m[0m
+[0m[1mmodule.test.data.archive_file.lambda: Read complete after 10s [id=379ae2d7c6e4a1d95f11a0eb934a3dbf421a6ca7][0m
+[0m[1mmodule.test.aws_s3_object.lambda_package: Creating...[0m[0m
+[0m[1mmodule.test.aws_s3_object.lambda_package: Provisioning with 'local-exec'...[0m[0m
+[0m[1mmodule.test.aws_s3_object.lambda_package (local-exec):[0m [0mExecuting: ["timeout" "60" "bash" "-c" "aws sts get-caller-identity\nprovider_account_id=303467602807\nprovider_role_name=$(echo arn:aws:sts::303467602807:assumed-role/jumphost-tester/aws-go-sdk-1698880667097504353 | awk -F/ '{ print $2}')\nprovider_arn=\"arn:aws:iam::$provider_account_id:role/$provider_role_name\"\necho \"provider's role = $provider_arn\"\nwhile true\ndo\n  ih-plan \\\n    --bucket \"infrahouse-jumphost-lambda-20231101231754150600000003\" \\\n    --aws-assume-role-arn \"$provider_arn\" \\\n    download \\\n    \"718ab07d-2a3b-87f4-e05b-d14a793ff622.zip\" \\\n    /dev/null && break\n  echo 'Waiting until the archive is available'\n  sleep 1\ndone\n"]
+[0m[1mmodule.test.aws_s3_object.lambda_package (local-exec):[0m [0m{
+[0m[1mmodule.test.aws_s3_object.lambda_package (local-exec):[0m [0m    "UserId": "AIDA6NHDLF2GVSWEAKI5Y",
+[0m[1mmodule.test.aws_s3_object.lambda_package (local-exec):[0m [0m    "Account": "990466748045",
+[0m[1mmodule.test.aws_s3_object.lambda_package (local-exec):[0m [0m    "Arn": "arn:aws:iam::990466748045:user/aleks"
+[0m[1mmodule.test.aws_s3_object.lambda_package (local-exec):[0m [0m}
+[0m[1mmodule.test.aws_s3_object.lambda_package (local-exec):[0m [0mprovider's role = arn:aws:iam::303467602807:role/jumphost-tester
+[0m[1mmodule.test.aws_s3_object.lambda_package (local-exec):[0m [0mSuccessfully downloaded s3://infrahouse-jumphost-lambda-20231101231754150600000003/718ab07d-2a3b-87f4-e05b-d14a793ff622.zip and saved in /dev/null.
+[0m[1mmodule.test.aws_s3_object.lambda_package: Creation complete after 2s [id=718ab07d-2a3b-87f4-e05b-d14a793ff622.zip][0m
+[0m[1mmodule.test.aws_lambda_function.update_dns: Creating...[0m[0m
+[0m[1mmodule.test.aws_lambda_function.update_dns: Creation complete after 6s [id=update_dns][0m
+[0m[1mmodule.test.aws_lambda_function_event_invoke_config.update_dns: Creating...[0m[0m
+[0m[1mmodule.test.aws_lambda_permission.allow_cloudwatch: Creating...[0m[0m
+[0m[1mmodule.test.aws_cloudwatch_event_target.scale-out: Creating...[0m[0m
+[0m[1mmodule.test.aws_cloudwatch_log_group.update_dns: Creating...[0m[0m
+[0m[1mmodule.test.aws_lambda_permission.allow_cloudwatch: Creation complete after 0s [id=AllowExecutionFromCloudWatch-out][0m
+[0m[1mmodule.test.aws_cloudwatch_event_target.scale-out: Creation complete after 0s [id=jumphost-scale20231101231817077000000009-terraform-2023110123184033700000000c][0m
+[0m[1mmodule.test.aws_lambda_function_event_invoke_config.update_dns: Creation complete after 1s [id=update_dns][0m
+[0m[1mmodule.test.aws_cloudwatch_log_group.update_dns: Creation complete after 1s [id=/aws/lambda/update_dns][0m
+[0m[1mmodule.test.data.aws_iam_policy_document.lambda_logging: Reading...[0m[0m
+[0m[1mmodule.test.data.aws_iam_policy_document.lambda_logging: Read complete after 0s [id=1343166137][0m
+[0m[1mmodule.test.aws_iam_policy.lambda_logging: Creating...[0m[0m
+[0m[1mmodule.test.aws_iam_policy.lambda_logging: Creation complete after 0s [id=arn:aws:iam::303467602807:policy/lambda_logging2023110123184060800000000d][0m
+[0m[1mmodule.test.aws_iam_role_policy_attachment.lambda_logs: Creating...[0m[0m
+[0m[1mmodule.test.aws_iam_role_policy_attachment.lambda_logs: Creation complete after 0s [id=iam_for_lambda-2023110123184107750000000e][0m
+[0m[1mmodule.test.aws_autoscaling_lifecycle_hook.launching: Creating...[0m[0m
+[0m[1mmodule.test.aws_autoscaling_lifecycle_hook.launching: Creation complete after 0s [id=launching][0m
+[0m[1m[32m
+Apply complete! Resources: 25 added, 0 changed, 0 destroyed.
+[0m[0m[1m[32m
+Outputs:
+
+[0mjumphost_hostname = "upright-possum"
+zone_id = "Z06790082OU0POPWOCPZ4"
+2023-11-01 16:18:44,253: INFO: test_module.test_module():39: {
+    "jumphost_hostname": {
+        "sensitive": false,
+        "type": "string",
+        "value": "upright-possum"
+    },
+    "zone_id": {
+        "sensitive": false,
+        "type": "string",
+        "value": "Z06790082OU0POPWOCPZ4"
+    }
+}
+FAILED
+
+=================================== FAILURES ===================================
+_________________________________ test_module __________________________________
+
+ec2_client = <botocore.client.EC2 object at 0x7f7cb31d4e20>
+route53_client = <botocore.client.Route53 object at 0x7f7cb30d07c0>
+
+    @pytest.mark.flaky(reruns=0, reruns_delay=30)
+    @pytest.mark.timeout(1800)
+    def test_module(ec2_client, route53_client):
+        terraform_dir = "test_data/test_module"
+    
+        with open(osp.join(terraform_dir, "terraform.tfvars"), "w") as fp:
+            fp.write(
+                dedent(
+                    f"""
+                    role_arn = "{TEST_ROLE_ARN}"
+                    test_zone = "{TEST_ZONE}"
+                    """
+                )
+            )
+    
+        with terraform_apply(
+            terraform_dir,
+            destroy_after=DESTROY_AFTER,
+            json_output=True,
+            enable_trace=TRACE_TERRAFORM,
+        ) as tf_output:
+            LOG.info(json.dumps(tf_output, indent=4))
+            zone_id = tf_output["zone_id"]["value"]
+            assert zone_id
+            jumphost_hostname = tf_output["jumphost_hostname"]["value"]
+            response = route53_client.list_resource_record_sets(HostedZoneId=zone_id)
+            a_records = [
+                a["Name"] for a in response["ResourceRecordSets"] if a["Type"] == "A"
+            ]
+            for record in [jumphost_hostname]:
+>               assert (
+                    "%s.%s." % (record, TEST_ZONE) in a_records
+                ), "Record %s is missing in %s: %s" % (
+                    record,
+                    TEST_ZONE,
+                    pformat(a_records, indent=4),
+                )
+E               AssertionError: Record upright-possum is missing in ci-cd.infrahouse.com: []
+E               assert ('%s.%s.' % ('upright-possum', 'ci-cd.infrahouse.com')) in []
+
+tests/test_module.py:48: AssertionError
+------------------------------ Captured log call -------------------------------
+INFO     tests.conftest:test_module.py:39 {
+    "jumphost_hostname": {
+        "sensitive": false,
+        "type": "string",
+        "value": "upright-possum"
+    },
+    "zone_id": {
+        "sensitive": false,
+        "type": "string",
+        "value": "Z06790082OU0POPWOCPZ4"
+    }
+}
+=========================== short test summary info ============================
+FAILED tests/test_module.py::test_module - AssertionError: Record upright-pos...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+========================= 1 failed in 80.41s (0:01:20) =========================
