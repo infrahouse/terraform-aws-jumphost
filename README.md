@@ -16,7 +16,7 @@ has the DNS name `jumphost.yourzone.com`.
 ```hcl
 module "jumphost" {
   source            = "infrahouse/jumphost/aws"
-  version           = "~> 0.1"
+  version           = "~> 1.0"
   keypair_name      = aws_key_pair.aleks.key_name
   subnet_ids        = module.management.subnet_public_ids
   environment       = var.environment
