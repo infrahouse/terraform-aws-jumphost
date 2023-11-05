@@ -3,23 +3,28 @@ resource "aws_iam_policy" "required" {
 }
 
 module "jumphost_profile" {
-  source         = "infrahouse/instance-profile/aws"
-  version        = "~> 1.0"
-  permissions    = data.aws_iam_policy_document.jumphost_permissions.json
-  profile_name   = "jumphost"
+  source       = "infrahouse/instance-profile/aws"
+  version      = "~> 1.0"
+  permissions  = data.aws_iam_policy_document.jumphost_permissions.json
+  profile_name = "jumphost"
   extra_policies = merge(
     {
-      required: aws_iam_policy.required.arn
+      required : aws_iam_policy.required.arn
     },
     var.extra_policies
   )
 }
 
 module "jumphost_userdata" {
-  source      = "infrahouse/cloud-init/aws"
-  version     = "~> 1.2"
-  environment = var.environment
-  role        = "jumphost"
+  source                   = "infrahouse/cloud-init/aws"
+  version                  = "~> 1.3"
+  environment              = var.environment
+  role                     = "jumphost"
+  puppet_debug_logging     = var.puppet_debug_logging
+  puppet_hiera_config_path = var.puppet_hiera_config_path
+  puppet_module_path       = var.puppet_module_path
+  puppet_root_directory    = var.puppet_root_directory
+  packages                 = var.packages
 }
 
 resource "aws_launch_template" "jumphost" {

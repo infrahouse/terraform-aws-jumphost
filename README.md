@@ -1,10 +1,64 @@
 # terraform-aws-jumphost
 
-Creates a jumphost.
+The module creates a jump host to provide SSH access to the AWS network.
 
-> Note: initial instances do not trigger lambda. Need to refresh the ASG manually to update DNS.
-> This limitation should be fixed in future.
+![jumphost](assets/jumphost.png)
 
+The module deploys an autoscaling group with only one EC2 instance that serves as a jump host
+to access internal resources not accessible from Internet otherwise.
+
+To make sense, the autoscaling group has to reside in a public subnet and the EC2 instance
+has to get a public IP address.
+
+When the instance launches or terminates it updates the Route53 zone, so the jump host
+has the DNS name `jumphost.yourzone.com`.
+
+```hcl
+module "jumphost" {
+  source            = "infrahouse/jumphost/aws"
+  version           = "~> 1.0"
+  keypair_name      = aws_key_pair.aleks.key_name
+  subnet_ids        = module.management.subnet_public_ids
+  environment       = var.environment
+  route53_zone_id   = module.infrahouse_com.infrahouse_zone_id
+  route53_zone_name = module.infrahouse_com.infrahouse_zone_name
+  extra_policies = {
+    (aws_iam_policy.package-publisher.name) : aws_iam_policy.package-publisher.arn
+  }
+  gpg_public_key = file("./files/DEB-GPG-KEY-infrahouse-jammy")
+}
+```
+
+> Note: initial instances do not trigger the DNS lambda. Need to refresh the ASG manually to update DNS.
+> This limitation should be fixed in the future.
+
+## IAM instance profile
+
+The module creates an instance profile called `jumphost` 
+using the [instance-profile](https://registry.terraform.io/modules/infrahouse/instance-profile/aws/latest) 
+module. The profile has a role with a quite limited permissions policy.
+```hcl
+data "aws_iam_policy_document" "jumphost_permissions" {
+  statement {
+    actions   = ["ec2:Describe*"]
+    resources = ["*"]
+  }
+}
+```
+If you need the jump host to have more permissions, attach additional policies to the role.
+The role is returned as outputs `jumphost_role_name` and `jumphost_role_arn`.
+
+Alternatively, you can specify a map of additional permissions in the `var.extra_policies` map:
+
+```hcl
+module "jumphost" {
+...
+  extra_policies = {
+    (aws_iam_policy.package-publisher.name) : aws_iam_policy.package-publisher.arn
+  }
+...
+}
+```
 ## Requirements
 
 | Name | Version |
@@ -28,7 +82,7 @@ Creates a jumphost.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_jumphost_profile"></a> [jumphost\_profile](#module\_jumphost\_profile) | infrahouse/instance-profile/aws | ~> 1.0 |
-| <a name="module_jumphost_userdata"></a> [jumphost\_userdata](#module\_jumphost\_userdata) | infrahouse/cloud-init/aws | ~> 1.2 |
+| <a name="module_jumphost_userdata"></a> [jumphost\_userdata](#module\_jumphost\_userdata) | infrahouse/cloud-init/aws | ~> 1.3 |
 
 ## Resources
 
@@ -76,6 +130,11 @@ Creates a jumphost.
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name. Passed on as a puppet fact | `string` | n/a | yes |
 | <a name="input_extra_policies"></a> [extra\_policies](#input\_extra\_policies) | A map of additional policy ARNs to attach to the jumphost role | `map(string)` | `{}` | no |
 | <a name="input_keypair_name"></a> [keypair\_name](#input\_keypair\_name) | SSH key pair name that will be added to the jumphost instance | `string` | n/a | yes |
+| <a name="input_packages"></a> [packages](#input\_packages) | List of packages to install when the instances bootstraps. | `list(string)` | `[]` | no |
+| <a name="input_puppet_debug_logging"></a> [puppet\_debug\_logging](#input\_puppet\_debug\_logging) | Enable debug logging if true. | `bool` | `false` | no |
+| <a name="input_puppet_hiera_config_path"></a> [puppet\_hiera\_config\_path](#input\_puppet\_hiera\_config\_path) | Path to hiera configuration file. | `string` | `"{root_directory}/environments/{environment}/hiera.yaml"` | no |
+| <a name="input_puppet_module_path"></a> [puppet\_module\_path](#input\_puppet\_module\_path) | Path to common puppet modules. | `string` | `"{root_directory}/modules"` | no |
+| <a name="input_puppet_root_directory"></a> [puppet\_root\_directory](#input\_puppet\_root\_directory) | Path where the puppet code is hosted. | `string` | `"/opt/puppet-code"` | no |
 | <a name="input_route53_hostname"></a> [route53\_hostname](#input\_route53\_hostname) | An A record with this name will be created in the rout53 zone | `string` | `"jumphost"` | no |
 | <a name="input_route53_ttl"></a> [route53\_ttl](#input\_route53\_ttl) | TTL in seconds on the route53 record | `number` | `300` | no |
 | <a name="input_route53_zone_id"></a> [route53\_zone\_id](#input\_route53\_zone\_id) | Route53 zone id of a zone where this jumphost will put an A record | `any` | n/a | yes |
@@ -84,4 +143,7 @@ Creates a jumphost.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_jumphost_role_arn"></a> [jumphost\_role\_arn](#output\_jumphost\_role\_arn) | Instance IAM role ARN. |
+| <a name="output_jumphost_role_name"></a> [jumphost\_role\_name](#output\_jumphost\_role\_name) | Instance IAM role name. |
