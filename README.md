@@ -2,15 +2,15 @@
 
 The module creates a jump host to provide SSH access to the AWS network.
 
-![jumphost](assets/jumphost.png)
+![jumphost](https://github.com/infrahouse/terraform-aws-jumphost/assets/1763754/c4e0bf15-c7c6-4bab-8399-a7b5b711bfbc)
 
 The module deploys an autoscaling group with only one EC2 instance that serves as a jump host
-to access internal resources not accessible from Internet otherwise.
+to access internal resources not accessible from the Internet otherwise.
 
-To make sense, the autoscaling group has to reside in a public subnet and the EC2 instance
+To make sense, the autoscaling group has to reside in a public subnet, and the EC2 instance
 has to get a public IP address.
 
-When the instance launches or terminates it updates the Route53 zone, so the jump host
+When the instance launches or terminates, it updates the Route53 zone, so the jump host
 has the DNS name `jumphost.yourzone.com`.
 
 ```hcl
@@ -29,7 +29,7 @@ module "jumphost" {
 }
 ```
 
-> Note: initial instances do not trigger the DNS lambda. Need to refresh the ASG manually to update DNS.
+> Note: initial instances do not trigger the DNS lambda. We need to refresh the ASG manually to update DNS.
 > This limitation should be fixed in the future.
 
 ## IAM instance profile
