@@ -7,7 +7,7 @@ data "aws_iam_policy_document" "jumphost_permissions" {
 
 data "aws_iam_policy_document" "required_permissions" {
   statement {
-    actions   = ["autoscaling:DescribeAutoScalingInstances"]
+    actions = ["autoscaling:DescribeAutoScalingInstances"]
     resources = [
       aws_autoscaling_group.jumphost.arn
     ]

@@ -1,9 +1,64 @@
 # terraform-aws-jumphost
 
-Creates a jumphost.
+The module creates a jump host to provide SSH access to the AWS network.
 
-> Note: initial instances do not trigger lambda. Need to refresh the ASG manually to update DNS.
-> This limitation should be fixed in future.
+![jumphost](assets/jumphost.png)
+
+The module deploys an autoscaling group with only one EC2 instance that serves as a jump host
+to access internal resources not accessible from Internet otherwise.
+
+To make sense, the autoscaling group has to reside in a public subnet and the EC2 instance
+has to get a public IP address.
+
+When the instance launches or terminates it updates the Route53 zone, so the jump host
+has the DNS name `jumphost.yourzone.com`.
+
+```hcl
+module "jumphost" {
+  source            = "infrahouse/jumphost/aws"
+  version           = "~> 0.1"
+  keypair_name      = aws_key_pair.aleks.key_name
+  subnet_ids        = module.management.subnet_public_ids
+  environment       = var.environment
+  route53_zone_id   = module.infrahouse_com.infrahouse_zone_id
+  route53_zone_name = module.infrahouse_com.infrahouse_zone_name
+  extra_policies = {
+    (aws_iam_policy.package-publisher.name) : aws_iam_policy.package-publisher.arn
+  }
+  gpg_public_key = file("./files/DEB-GPG-KEY-infrahouse-jammy")
+}
+```
+
+> Note: initial instances do not trigger the DNS lambda. Need to refresh the ASG manually to update DNS.
+> This limitation should be fixed in the future.
+
+## IAM instance profile
+
+The module creates an instance profile called `jumphost` 
+using the [instance-profile](https://registry.terraform.io/modules/infrahouse/instance-profile/aws/latest) 
+module. The profile has a role with a quite limited permissions policy.
+```hcl
+data "aws_iam_policy_document" "jumphost_permissions" {
+  statement {
+    actions   = ["ec2:Describe*"]
+    resources = ["*"]
+  }
+}
+```
+If you need the jump host to have more permissions, attach additional policies to the role.
+The role is returned as outputs `jumphost_role_name` and `jumphost_role_arn`.
+
+Alternatively, you can specify a map of additional permissions in the `var.extra_policies` map:
+
+```hcl
+module "jumphost" {
+...
+  extra_policies = {
+    (aws_iam_policy.package-publisher.name) : aws_iam_policy.package-publisher.arn
+  }
+...
+}
+```
 
 ## Requirements
 
