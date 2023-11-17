@@ -17,7 +17,7 @@ module "jumphost_profile" {
 
 module "jumphost_userdata" {
   source                   = "infrahouse/cloud-init/aws"
-  version                  = "~> 1.3"
+  version                  = "~> 1.5"
   environment              = var.environment
   role                     = "jumphost"
   puppet_debug_logging     = var.puppet_debug_logging
@@ -25,6 +25,8 @@ module "jumphost_userdata" {
   puppet_module_path       = var.puppet_module_path
   puppet_root_directory    = var.puppet_root_directory
   packages                 = var.packages
+  extra_files              = var.extra_files
+  extra_repos              = var.extra_repos
 }
 
 resource "aws_launch_template" "jumphost" {
