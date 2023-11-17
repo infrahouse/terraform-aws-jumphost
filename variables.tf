@@ -4,10 +4,29 @@ variable "ami_id" {
   default     = null
 }
 
+variable "extra_files" {
+  description = "Additional files to create on an instance."
+  type = list(object({
+    content     = string
+    path        = string
+    permissions = string
+  }))
+  default = []
+}
+
 variable "extra_policies" {
   description = "A map of additional policy ARNs to attach to the jumphost role"
   type        = map(string)
   default     = {}
+}
+
+variable "extra_repos" {
+  description = "Additional APT repositories to configure on an instance."
+  type = map(object({
+    source = string
+    key    = string
+  }))
+  default = {}
 }
 
 variable "keypair_name" {
