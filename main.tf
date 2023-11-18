@@ -17,10 +17,11 @@ module "jumphost_profile" {
 
 module "jumphost_userdata" {
   source                   = "infrahouse/cloud-init/aws"
-  version                  = "~> 1.5"
+  version                  = "~> 1.6"
   environment              = var.environment
   role                     = "jumphost"
   puppet_debug_logging     = var.puppet_debug_logging
+  puppet_environmentpath   = var.puppet_environmentpath
   puppet_hiera_config_path = var.puppet_hiera_config_path
   puppet_module_path       = var.puppet_module_path
   puppet_root_directory    = var.puppet_root_directory

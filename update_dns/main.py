@@ -1,4 +1,6 @@
 from os import environ
+from pprint import pprint
+
 import boto3
 from botocore.exceptions import ClientError
 
@@ -34,19 +36,41 @@ def add_record(zone_id, zone_name, hostname, instance_id, ttl: int):
     print(f"{public_ip = }")
 
     route53_client = boto3.client("route53")
-    response = route53_client.list_resource_record_sets(
-        HostedZoneId=zone_id,
-        StartRecordType="A",
-        StartRecordName=f"{hostname}.{zone_name}",
-        MaxItems="1",
-    )
+    start_record_type = None
+    start_record_name = None
+    start_record_identifier = None
     ip_set = {public_ip}
-    for rr_set in response["ResourceRecordSets"]:
-        if "ResourceRecords" in rr_set:
-            for rr in rr_set["ResourceRecords"]:
-                ip_set.add(rr["Value"])
+    while True:
+        kwargs = {
+            "HostedZoneId": zone_id,
+            "MaxItems": "100",
+        }
+        if start_record_name:
+            kwargs["StartRecordName"] = start_record_name
 
-    r_records = [{"Value": ip} for ip in list(ip_set)]
+        if start_record_type:
+            kwargs["StartRecordType"] = start_record_type
+
+        if start_record_identifier:
+            kwargs["StartRecordIdentifier"] = start_record_identifier
+
+        response = route53_client.list_resource_record_sets(**kwargs)
+        pprint(response)
+        for rr_set in response["ResourceRecordSets"]:
+            print(f"{rr_set = }")
+            if rr_set["Name"] == f"{hostname}.{zone_name}" and rr_set["Type"] == "A" and "ResourceRecords" in rr_set:
+                for rr in rr_set["ResourceRecords"]:
+                    ip_set.add(rr["Value"])
+
+        r_records = [{"Value": ip} for ip in list(ip_set)]
+        if response["IsTruncated"]:
+            start_record_type = response["NextRecordType"]
+            start_record_name = response["NextRecordName"]
+            start_record_identifier = response["NextRecordIdentifier"]
+        else:
+            break
+
+    print(f"{ip_set =}")
     route53_client.change_resource_record_sets(
         HostedZoneId=zone_id,
         ChangeBatch={
