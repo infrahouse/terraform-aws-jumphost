@@ -32,7 +32,7 @@ module "jumphost_userdata" {
 
 resource "aws_launch_template" "jumphost" {
   name_prefix   = "jumphost-"
-  instance_type = "t3a.micro"
+  instance_type = var.instance_type
   key_name      = var.keypair_name
   image_id      = var.ami_id == null ? data.aws_ami.ubuntu.id : var.ami_id
   iam_instance_profile {
