@@ -29,6 +29,10 @@ variable "extra_repos" {
   default = {}
 }
 
+variable "instance_type" {
+  description = "EC2 Instance type"
+  default     = "t3a.micro"
+}
 variable "keypair_name" {
   description = "SSH key pair name that will be added to the jumphost instance"
   type        = string
