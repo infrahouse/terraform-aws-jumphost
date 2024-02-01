@@ -49,3 +49,7 @@ data "aws_region" "current" {}
 data "aws_route53_zone" "jumphost_zone" {
   zone_id = var.route53_zone_id
 }
+
+data "aws_subnet" "first" {
+  id = var.subnet_ids[0]
+}

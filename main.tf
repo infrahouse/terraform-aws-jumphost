@@ -39,6 +39,9 @@ resource "aws_launch_template" "jumphost" {
     arn = module.jumphost_profile.instance_profile_arn
   }
   user_data = module.jumphost_userdata.userdata
+  vpc_security_group_ids = [
+    aws_security_group.jumphost.id
+  ]
 }
 
 resource "aws_autoscaling_group" "jumphost" {
