@@ -2,11 +2,16 @@ resource "aws_iam_policy" "required" {
   policy = data.aws_iam_policy_document.required_permissions.json
 }
 
+resource "random_string" "profile-suffix" {
+  length  = 12
+  special = false
+}
+
 module "jumphost_profile" {
   source       = "infrahouse/instance-profile/aws"
   version      = "~> 1.0"
   permissions  = data.aws_iam_policy_document.jumphost_permissions.json
-  profile_name = "jumphost"
+  profile_name = "jumphost-${random_string.profile-suffix.result}"
   extra_policies = merge(
     {
       required : aws_iam_policy.required.arn
@@ -39,10 +44,21 @@ resource "aws_launch_template" "jumphost" {
     arn = module.jumphost_profile.instance_profile_arn
   }
   user_data = module.jumphost_userdata.userdata
+  vpc_security_group_ids = [
+    aws_security_group.jumphost.id
+  ]
+}
+
+resource "random_string" "asg_name" {
+  length  = 6
+  special = false
+}
+locals {
+  asg_name = "${aws_launch_template.jumphost.name}-${random_string.asg_name.result}"
 }
 
 resource "aws_autoscaling_group" "jumphost" {
-  name_prefix           = aws_launch_template.jumphost.name_prefix
+  name                  = local.asg_name
   max_size              = 3
   min_size              = 1
   vpc_zone_identifier   = var.subnet_ids
@@ -66,30 +82,9 @@ resource "aws_autoscaling_group" "jumphost" {
     propagate_at_launch = true
     value               = var.route53_hostname
   }
-}
-
-resource "aws_cloudwatch_event_rule" "scale" {
-  name_prefix = "jumphost-scale"
-  description = "Jumphost ASG lifecycle hook"
-  event_pattern = jsonencode(
-    {
-      "source" : ["aws.autoscaling"],
-      "detail-type" : [
-        "EC2 Instance-launch Lifecycle Action",
-        "EC2 Instance-terminate Lifecycle Action"
-      ],
-      "detail" : {
-        "AutoScalingGroupName" : [
-          aws_autoscaling_group.jumphost.name
-        ]
-      }
-    }
-  )
-}
-
-resource "aws_cloudwatch_event_target" "scale-out" {
-  arn  = aws_lambda_function.update_dns.arn
-  rule = aws_cloudwatch_event_rule.scale.name
+  depends_on = [
+    module.update_dns
+  ]
 }
 
 

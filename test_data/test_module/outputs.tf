@@ -3,7 +3,7 @@ output "zone_id" {
 }
 
 output "jumphost_hostname" {
-  value = random_pet.hostname.id
+  value = local.jumphost_hostname
 }
 
 output "jumphost_asg_name" {
