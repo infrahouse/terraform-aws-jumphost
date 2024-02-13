@@ -50,6 +50,6 @@ data "aws_route53_zone" "jumphost_zone" {
   zone_id = var.route53_zone_id
 }
 
-data "aws_subnet" "first" {
+data "aws_subnet" "selected" {
   id = var.subnet_ids[0]
 }

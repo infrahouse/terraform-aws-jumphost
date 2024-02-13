@@ -42,25 +42,6 @@ def test_module(ec2_client, route53_client, autoscaling_client):
         pprint(tf_output)
         asg_name = tf_output["jumphost_asg_name"]["value"]
         LOG.debug("ASG name: %s", asg_name)
-        response = autoscaling_client.start_instance_refresh(
-            AutoScalingGroupName=asg_name,
-            Preferences={
-                "InstanceWarmup": 60,
-            },
-        )
-        LOG.debug("Response = %s", pformat(response, indent=4))
-        refresh_id = response["InstanceRefreshId"]
-        while True:
-            response = autoscaling_client.describe_instance_refreshes(
-                AutoScalingGroupName=tf_output["jumphost_asg_name"]["value"],
-                InstanceRefreshIds=[refresh_id],
-            )
-            if response["InstanceRefreshes"][0]["Status"] == "Successful":
-                break
-            else:
-                LOG.info("Waiting until ASG refresh %s is done.", refresh_id)
-                sleep(60)
-
         LOG.info(json.dumps(tf_output, indent=4))
         zone_id = tf_output["zone_id"]["value"]
         assert zone_id
