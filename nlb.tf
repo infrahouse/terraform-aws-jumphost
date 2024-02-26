@@ -18,10 +18,7 @@ resource "aws_lb_target_group" "jumphost" {
   port        = 22
   protocol    = "TCP"
   vpc_id      = data.aws_vpc.nlb_selected.id
-  #  health_check {
-  #
-  #  }
-  tags = local.tags
+  tags        = local.tags
 }
 
 resource "aws_lb_listener" "jumphost" {
