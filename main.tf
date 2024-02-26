@@ -22,7 +22,7 @@ module "jumphost_profile" {
 
 module "jumphost_userdata" {
   source                   = "infrahouse/cloud-init/aws"
-  version                  = "~> 1.6"
+  version                  = "~> 1.10"
   environment              = var.environment
   role                     = "jumphost"
   puppet_debug_logging     = var.puppet_debug_logging
@@ -30,9 +30,26 @@ module "jumphost_userdata" {
   puppet_hiera_config_path = var.puppet_hiera_config_path
   puppet_module_path       = var.puppet_module_path
   puppet_root_directory    = var.puppet_root_directory
-  packages                 = var.packages
-  extra_files              = var.extra_files
-  extra_repos              = var.extra_repos
+  packages = concat(
+    var.packages,
+    [
+      "nfs-common"
+    ]
+  )
+  extra_files = var.extra_files
+  extra_repos = var.extra_repos
+  mounts = [
+    # See https://docs.aws.amazon.com/efs/latest/ug/nfs-automount-efs.html
+    [
+      "${aws_efs_file_system.home.dns_name}:/",
+      "/home",
+      "nfs4",
+      "nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev",
+      "0",
+      "0"
+    ]
+  ]
+  ssh_host_keys = var.ssh_host_keys
 }
 
 resource "aws_launch_template" "jumphost" {
@@ -47,6 +64,7 @@ resource "aws_launch_template" "jumphost" {
   vpc_security_group_ids = [
     aws_security_group.jumphost.id
   ]
+  tags = local.tags
 }
 
 resource "random_string" "asg_name" {
@@ -59,14 +77,17 @@ locals {
 
 resource "aws_autoscaling_group" "jumphost" {
   name                  = local.asg_name
-  max_size              = 3
-  min_size              = 1
+  max_size              = length(var.subnet_ids) + 1
+  min_size              = length(var.subnet_ids)
   vpc_zone_identifier   = var.subnet_ids
   max_instance_lifetime = 90 * 24 * 3600
   launch_template {
     id      = aws_launch_template.jumphost.id
     version = aws_launch_template.jumphost.latest_version
   }
+  target_group_arns = [
+    aws_lb_target_group.jumphost.arn
+  ]
 
   lifecycle {
     create_before_destroy = true
@@ -82,28 +103,16 @@ resource "aws_autoscaling_group" "jumphost" {
     propagate_at_launch = true
     value               = var.route53_hostname
   }
-  depends_on = [
-    module.update_dns
-  ]
+  dynamic "tag" {
+    for_each = local.tags
+    content {
+      key                 = tag.key
+      propagate_at_launch = true
+      value               = tag.value
+    }
+  }
 }
-
 
 locals {
   lifecycle_hook_wait_time = 300
-}
-
-resource "aws_autoscaling_lifecycle_hook" "launching" {
-  name                   = "launching"
-  autoscaling_group_name = aws_autoscaling_group.jumphost.name
-  lifecycle_transition   = "autoscaling:EC2_INSTANCE_LAUNCHING"
-  heartbeat_timeout      = local.lifecycle_hook_wait_time
-  default_result         = "ABANDON"
-}
-
-resource "aws_autoscaling_lifecycle_hook" "terminating" {
-  name                   = "terminating"
-  autoscaling_group_name = aws_autoscaling_group.jumphost.name
-  lifecycle_transition   = "autoscaling:EC2_INSTANCE_TERMINATING"
-  heartbeat_timeout      = local.lifecycle_hook_wait_time
-  default_result         = "ABANDON"
 }

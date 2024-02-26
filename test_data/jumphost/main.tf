@@ -7,12 +7,37 @@ resource "random_pet" "hostname" {}
 
 locals {
   jumphost_hostname = "jumphost-${random_pet.hostname.id}"
+  environment       = "development"
 }
-module "test" {
-  source           = "../../"
-  environment      = "development"
-  keypair_name     = aws_key_pair.test.key_name
-  route53_zone_id  = data.aws_route53_zone.cicd.zone_id
-  subnet_ids       = module.service-network.subnet_public_ids
-  route53_hostname = local.jumphost_hostname
+
+module "jumphost" {
+  source                   = "../.."
+  keypair_name             = aws_key_pair.test.key_name
+  subnet_ids               = var.subnet_private_ids
+  nlb_subnet_ids           = var.subnet_public_ids
+  environment              = local.environment
+  route53_zone_id          = data.aws_route53_zone.cicd.zone_id
+  route53_hostname         = local.jumphost_hostname
+  puppet_hiera_config_path = "/opt/infrahouse-puppet-data/environments/${local.environment}/hiera.yaml"
+  packages = [
+    "infrahouse-puppet-data"
+  ]
+  ssh_host_keys = [
+    {
+      type : "rsa"
+      private : file("${path.module}/ssh_keys/ssh_host_rsa_key")
+      public : file("${path.module}/ssh_keys/ssh_host_rsa_key.pub")
+    },
+    {
+      type : "ecdsa"
+      private : file("${path.module}/ssh_keys/ssh_host_ecdsa_key")
+      public : file("${path.module}/ssh_keys/ssh_host_ecdsa_key.pub")
+    },
+    {
+      type : "ed25519"
+      private : file("${path.module}/ssh_keys/ssh_host_ed25519_key")
+      public : file("${path.module}/ssh_keys/ssh_host_ed25519_key.pub")
+    }
+  ]
+
 }
