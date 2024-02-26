@@ -3,9 +3,10 @@ locals {
 
 }
 resource "aws_lb" "jumphost" {
-  name_prefix        = local.name_prefix
-  load_balancer_type = "network"
-  subnets            = var.nlb_subnet_ids
+  name_prefix                      = local.name_prefix
+  load_balancer_type               = "network"
+  subnets                          = var.nlb_subnet_ids
+  enable_cross_zone_load_balancing = true
   security_groups = [
     aws_security_group.jumphost.id
   ]
