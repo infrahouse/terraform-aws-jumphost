@@ -6,6 +6,6 @@ output "jumphost_hostname" {
   value = local.jumphost_hostname
 }
 
-output "jumphost_asg_name" {
-  value = module.test.jumphost_asg_name
+output "jumphost_fqdn" {
+  value = module.jumphost.jumphost_hostname
 }

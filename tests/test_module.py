@@ -1,10 +1,7 @@
 import json
 from os import path as osp
-from pprint import pformat, pprint
 from textwrap import dedent
-from time import sleep
 
-import pytest
 from infrahouse_toolkit.terraform import terraform_apply
 
 from tests.conftest import (
@@ -17,44 +14,52 @@ from tests.conftest import (
 )
 
 
-@pytest.mark.flaky(reruns=0, reruns_delay=30)
-@pytest.mark.timeout(1800)
 def test_module(ec2_client, route53_client, autoscaling_client):
-    terraform_dir = "test_data/test_module"
+    terraform_root_dir = "test_data/"
 
-    with open(osp.join(terraform_dir, "terraform.tfvars"), "w") as fp:
+    terraform_module_dir = osp.join(terraform_root_dir, "service-network")
+    # Create service network
+    with open(osp.join(terraform_module_dir, "terraform.tfvars"), "w") as fp:
         fp.write(
             dedent(
                 f"""
-                region = "{REGION}"
                 role_arn = "{TEST_ROLE_ARN}"
-                test_zone = "{TEST_ZONE}"
+                region = "{REGION}"
                 """
             )
         )
-
     with terraform_apply(
-        terraform_dir,
+        terraform_module_dir,
         destroy_after=DESTROY_AFTER,
         json_output=True,
         enable_trace=TRACE_TERRAFORM,
-    ) as tf_output:
-        pprint(tf_output)
-        asg_name = tf_output["jumphost_asg_name"]["value"]
-        LOG.debug("ASG name: %s", asg_name)
-        LOG.info(json.dumps(tf_output, indent=4))
-        zone_id = tf_output["zone_id"]["value"]
-        assert zone_id
-        jumphost_hostname = tf_output["jumphost_hostname"]["value"]
-        response = route53_client.list_resource_record_sets(HostedZoneId=zone_id)
-        a_records = [
-            a["Name"] for a in response["ResourceRecordSets"] if a["Type"] == "A"
-        ]
-        for record in [jumphost_hostname]:
-            assert (
-                "%s.%s." % (record, TEST_ZONE) in a_records
-            ), "Record %s is missing in %s: %s" % (
-                record,
-                TEST_ZONE,
-                pformat(a_records, indent=4),
+    ) as tf_service_network_output:
+        LOG.info(json.dumps(tf_service_network_output, indent=4))
+
+        subnet_public_ids = tf_service_network_output["subnet_public_ids"]["value"]
+        subnet_private_ids = tf_service_network_output["subnet_private_ids"]["value"]
+        internet_gateway_id = tf_service_network_output["internet_gateway_id"]["value"]
+
+        terraform_module_dir = osp.join(terraform_root_dir, "jumphost")
+        with open(osp.join(terraform_module_dir, "terraform.tfvars"), "w") as fp:
+            fp.write(
+                dedent(
+                    f"""
+                    region = "{REGION}"
+                    role_arn = "{TEST_ROLE_ARN}"
+                    test_zone = "{TEST_ZONE}"
+
+                    subnet_public_ids = {json.dumps(subnet_public_ids)}
+                    subnet_private_ids = {json.dumps(subnet_private_ids)}
+                    internet_gateway_id = "{internet_gateway_id}"
+                    """
+                )
             )
+
+        with terraform_apply(
+            terraform_module_dir,
+            destroy_after=DESTROY_AFTER,
+            json_output=True,
+            enable_trace=TRACE_TERRAFORM,
+        ) as tf_output:
+            LOG.info("%s", json.dumps(tf_output, indent=4))

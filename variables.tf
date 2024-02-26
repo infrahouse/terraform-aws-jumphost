@@ -91,11 +91,29 @@ variable "route53_ttl" {
   default     = 300
 }
 
+variable "ssh_host_keys" {
+  description = "List of instance's SSH host keys"
+  type = list(
+    object(
+      {
+        type : string
+        private : string
+        public : string
+      }
+    )
+  )
+  default = []
+}
+
 variable "subnet_ids" {
   description = "List of subnet ids where the jumphost instances will be created"
   type        = list(string)
 }
 
+variable "nlb_subnet_ids" {
+  description = "List of subnet ids where the NLB will be created"
+  type        = list(string)
+}
 
 variable "ubuntu_codename" {
   description = "Ubuntu version to use for the jumphost"
