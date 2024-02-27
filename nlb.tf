@@ -19,6 +19,10 @@ resource "aws_lb_target_group" "jumphost" {
   protocol    = "TCP"
   vpc_id      = data.aws_vpc.nlb_selected.id
   tags        = local.tags
+  stickiness {
+    enabled = true
+    type    = "source_ip"
+  }
 }
 
 resource "aws_lb_listener" "jumphost" {
