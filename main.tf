@@ -8,7 +8,8 @@ resource "random_string" "profile-suffix" {
 }
 
 module "jumphost_profile" {
-  source       = "git::https://github.com/infrahouse/terraform-aws-instance-profile.git?ref=1.3.0"
+  source       = "registry.infrahouse.com/infrahouse/instance-profile/aws"
+  version      = "~> 1.3"
   permissions  = data.aws_iam_policy_document.jumphost_permissions.json
   profile_name = "jumphost-${random_string.profile-suffix.result}"
   extra_policies = merge(
