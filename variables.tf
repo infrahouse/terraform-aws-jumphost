@@ -4,6 +4,18 @@ variable "ami_id" {
   default     = null
 }
 
+variable "asg_min_size" {
+  description = "Minimal number of EC2 instances in the ASG. By default, the number of subnets"
+  type        = number
+  default     = null
+}
+
+variable "asg_max_size" {
+  description = "Maximum number of EC2 instances in the ASG. By default, the number of subnets plus one"
+  type        = number
+  default     = null
+}
+
 variable "extra_files" {
   description = "Additional files to create on an instance."
   type = list(object({

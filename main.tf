@@ -22,7 +22,7 @@ module "jumphost_profile" {
 
 module "jumphost_userdata" {
   source                   = "registry.infrahouse.com/infrahouse/cloud-init/aws"
-  version                  = "~> 1.11"
+  version                  = "~> 1.12"
   environment              = var.environment
   role                     = "jumphost"
   puppet_debug_logging     = var.puppet_debug_logging
@@ -78,8 +78,8 @@ locals {
 
 resource "aws_autoscaling_group" "jumphost" {
   name                  = local.asg_name
-  max_size              = length(var.subnet_ids) + 1
-  min_size              = length(var.subnet_ids)
+  max_size              = var.asg_max_size == null ? length(var.subnet_ids) + 1 : var.asg_max_size
+  min_size              = var.asg_min_size == null ? length(var.subnet_ids) : var.asg_min_size
   vpc_zone_identifier   = var.subnet_ids
   max_instance_lifetime = 90 * 24 * 3600
   launch_template {
