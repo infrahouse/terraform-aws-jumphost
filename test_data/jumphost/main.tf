@@ -18,6 +18,8 @@ module "jumphost" {
   environment              = local.environment
   route53_zone_id          = data.aws_route53_zone.cicd.zone_id
   route53_hostname         = local.jumphost_hostname
+  asg_min_size             = 1
+  asg_max_size             = 1
   puppet_hiera_config_path = "/opt/infrahouse-puppet-data/environments/${local.environment}/hiera.yaml"
   packages = [
     "infrahouse-puppet-data"
