@@ -25,6 +25,7 @@ module "jumphost_userdata" {
   version                  = "~> 1.12"
   environment              = var.environment
   role                     = "jumphost"
+  custom_facts             = var.puppet_custom_facts
   puppet_debug_logging     = var.puppet_debug_logging
   puppet_environmentpath   = var.puppet_environmentpath
   puppet_hiera_config_path = var.puppet_hiera_config_path
