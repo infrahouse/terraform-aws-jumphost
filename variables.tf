@@ -61,6 +61,12 @@ variable "packages" {
   default     = []
 }
 
+variable "puppet_custom_facts" {
+  description = "A map of custom puppet facts"
+  type        = any
+  default     = {}
+}
+
 variable "puppet_debug_logging" {
   description = "Enable debug logging if true."
   type        = bool
