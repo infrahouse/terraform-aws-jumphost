@@ -3,6 +3,7 @@ terraform.tfstate*
 .terraform.lock.hcl
 .terraform
 __pycache__
+.pytest_cache/
 *.zip
 terraform.tfvars
 .terraform.tfstate.lock.info
