@@ -22,7 +22,7 @@ module "jumphost_profile" {
 
 module "jumphost_userdata" {
   source                   = "registry.infrahouse.com/infrahouse/cloud-init/aws"
-  version                  = "~> 1.12"
+  version                  = "1.12.4"
   environment              = var.environment
   role                     = "jumphost"
   custom_facts             = var.puppet_custom_facts
