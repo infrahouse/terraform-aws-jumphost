@@ -20,6 +20,7 @@ module "jumphost" {
   route53_hostname         = local.jumphost_hostname
   asg_min_size             = 1
   asg_max_size             = 1
+  instance_type            = "t3a.medium"
   puppet_hiera_config_path = "/opt/infrahouse-puppet-data/environments/${local.environment}/hiera.yaml"
   packages = [
     "infrahouse-puppet-data"

@@ -23,6 +23,10 @@ resource "aws_lb_target_group" "jumphost" {
     enabled = true
     type    = "source_ip"
   }
+  health_check {
+    protocol = "TCP"
+    port     = 7
+  }
 }
 
 resource "aws_lb_listener" "jumphost" {
