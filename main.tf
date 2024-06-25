@@ -9,9 +9,10 @@ resource "random_string" "profile-suffix" {
 
 module "jumphost_profile" {
   source       = "registry.infrahouse.com/infrahouse/instance-profile/aws"
-  version      = "~> 1.3"
+  version      = "~> 1.4"
   permissions  = data.aws_iam_policy_document.jumphost_permissions.json
   profile_name = "jumphost-${random_string.profile-suffix.result}"
+  role_name    = var.instance_role_name
   extra_policies = merge(
     {
       required : aws_iam_policy.required.arn

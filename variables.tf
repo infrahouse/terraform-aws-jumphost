@@ -40,6 +40,12 @@ variable "extra_repos" {
   }))
   default = {}
 }
+variable "instance_role_name" {
+  description = "If specified, the instance profile wil have a role with this name"
+  type        = string
+  default     = null
+}
+
 
 variable "instance_type" {
   description = "EC2 Instance type"
