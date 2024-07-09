@@ -140,6 +140,12 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "nlb_internal" {
+  description = "If true, the load balancer's DNS name will resolve into internal IP addresses."
+  type        = bool
+  default     = false
+}
+
 variable "nlb_subnet_ids" {
   description = "List of subnet ids where the NLB will be created"
   type        = list(string)
