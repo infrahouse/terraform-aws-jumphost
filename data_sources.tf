@@ -65,3 +65,12 @@ data "aws_subnet" "nlb_selected" {
 data "aws_vpc" "nlb_selected" {
   id = data.aws_subnet.nlb_selected.vpc_id
 }
+
+data "aws_ami" "selected" {
+  filter {
+    name = "image-id"
+    values = [
+      local.ami_id
+    ]
+  }
+}

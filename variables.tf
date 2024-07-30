@@ -133,6 +133,12 @@ variable "nlb_subnet_ids" {
   type        = list(string)
 }
 
+variable "root_volume_size" {
+  description = "Root volume size in EC2 instance in Gigabytes"
+  type        = number
+  default     = 30
+}
+
 variable "ubuntu_codename" {
   description = "Ubuntu version to use for the jumphost"
   type        = string
