@@ -59,9 +59,16 @@ resource "aws_launch_template" "jumphost" {
   name_prefix   = "jumphost-"
   instance_type = var.instance_type
   key_name      = var.keypair_name
-  image_id      = var.ami_id == null ? data.aws_ami.ubuntu.id : var.ami_id
+  image_id      = local.ami_id
   iam_instance_profile {
     arn = module.jumphost_profile.instance_profile_arn
+  }
+  block_device_mappings {
+    device_name = data.aws_ami.selected.root_device_name
+    ebs {
+      volume_size           = var.root_volume_size
+      delete_on_termination = true
+    }
   }
   user_data = module.jumphost_userdata.userdata
   vpc_security_group_ids = [
