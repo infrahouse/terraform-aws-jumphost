@@ -51,19 +51,18 @@ data "aws_route53_zone" "jumphost_zone" {
 }
 
 data "aws_subnet" "selected" {
-  id = var.subnet_ids[0]
+  for_each = toset(var.subnet_ids)
+  id       = each.key
 }
 
 data "aws_vpc" "selected" {
-  id = data.aws_subnet.selected.vpc_id
+  for_each = toset(var.subnet_ids)
+  id       = data.aws_subnet.selected[each.key].vpc_id
 }
 
 data "aws_subnet" "nlb_selected" {
-  id = var.nlb_subnet_ids[0]
-}
-
-data "aws_vpc" "nlb_selected" {
-  id = data.aws_subnet.nlb_selected.vpc_id
+  for_each = toset(var.nlb_subnet_ids)
+  id       = each.key
 }
 
 data "aws_ami" "selected" {

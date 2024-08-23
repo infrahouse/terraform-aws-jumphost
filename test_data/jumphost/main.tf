@@ -13,8 +13,8 @@ locals {
 module "jumphost" {
   source                   = "../.."
   keypair_name             = aws_key_pair.test.key_name
-  subnet_ids               = var.subnet_private_ids
-  nlb_subnet_ids           = var.subnet_public_ids
+  subnet_ids               = var.asg_subnet_ids
+  nlb_subnet_ids           = var.nlb_subnet_ids
   environment              = local.environment
   route53_zone_id          = data.aws_route53_zone.cicd.zone_id
   route53_hostname         = local.jumphost_hostname

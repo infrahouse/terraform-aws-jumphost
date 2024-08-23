@@ -1,8 +1,11 @@
+import logging
+from os import path as osp
+from textwrap import dedent
+
 import boto3
 import pytest
-import logging
-
 from infrahouse_toolkit.logging import setup_logging
+from infrahouse_toolkit.terraform import terraform_apply
 
 # "303467602807" is our test account
 TEST_ACCOUNT = "303467602807"
@@ -11,6 +14,7 @@ DEFAULT_PROGRESS_INTERVAL = 10
 TRACE_TERRAFORM = False
 DESTROY_AFTER = True
 UBUNTU_CODENAME = "jammy"
+TERRAFORM_ROOT_DIR = "test_data"
 
 LOG = logging.getLogger(__name__)
 REGION = "us-east-2"
@@ -22,9 +26,7 @@ setup_logging(LOG, debug=True)
 @pytest.fixture(scope="session")
 def aws_iam_role():
     sts = boto3.client("sts")
-    return sts.assume_role(
-        RoleArn=TEST_ROLE_ARN, RoleSessionName=TEST_ROLE_ARN.split("/")[1]
-    )
+    return sts.assume_role(RoleArn=TEST_ROLE_ARN, RoleSessionName=TEST_ROLE_ARN.split("/")[1])
 
 
 @pytest.fixture(scope="session")
@@ -64,3 +66,25 @@ def elbv2_client(boto3_session):
 def autoscaling_client(boto3_session):
     assert boto3_session.client("sts").get_caller_identity()["Account"] == TEST_ACCOUNT
     return boto3_session.client("autoscaling", region_name=REGION)
+
+
+@pytest.fixture(scope="session")
+def service_network(boto3_session):
+    terraform_module_dir = osp.join(TERRAFORM_ROOT_DIR, "service-network")
+    # Create service network
+    with open(osp.join(terraform_module_dir, "terraform.tfvars"), "w") as fp:
+        fp.write(
+            dedent(
+                f"""
+                role_arn = "{TEST_ROLE_ARN}"
+                region   = "{REGION}"
+                """
+            )
+        )
+    with terraform_apply(
+        terraform_module_dir,
+        destroy_after=DESTROY_AFTER,
+        json_output=True,
+        enable_trace=TRACE_TERRAFORM,
+    ) as tf_service_network_output:
+        yield tf_service_network_output
