@@ -6,7 +6,7 @@ resource "aws_lb" "jumphost" {
   name_prefix                      = local.name_prefix
   load_balancer_type               = "network"
   subnets                          = var.nlb_subnet_ids
-  internal                         = var.nlb_internal
+  internal                         = local.nlb_internal
   enable_cross_zone_load_balancing = true
   security_groups = [
     aws_security_group.jumphost.id
@@ -18,7 +18,7 @@ resource "aws_lb_target_group" "jumphost" {
   name_prefix = local.name_prefix
   port        = 22
   protocol    = "TCP"
-  vpc_id      = data.aws_vpc.nlb_selected.id
+  vpc_id      = local.vpc_id
   tags        = local.tags
   stickiness {
     enabled = true

@@ -141,9 +141,9 @@ variable "subnet_ids" {
 }
 
 variable "nlb_internal" {
-  description = "If true, the load balancer's DNS name will resolve into internal IP addresses."
+  description = "Not used. The value is derived from NLB's subnets map_public_ip_on_launch."
   type        = bool
-  default     = false
+  default     = null
 }
 
 variable "nlb_subnet_ids" {

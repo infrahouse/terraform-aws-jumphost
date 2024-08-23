@@ -1,5 +1,5 @@
 resource "aws_security_group" "jumphost" {
-  vpc_id      = data.aws_subnet.selected.vpc_id
+  vpc_id      = local.vpc_id
   name_prefix = "jumphost"
   description = "Manage traffic to jumphost"
   tags = merge({
@@ -15,7 +15,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
   from_port         = 22
   to_port           = 22
   ip_protocol       = "tcp"
-  cidr_ipv4         = "0.0.0.0/0"
+  cidr_ipv4         = local.nlb_internal ? data.aws_vpc.selected[var.subnet_ids[0]].cidr_block : "0.0.0.0/0"
   tags = merge({
     Name = "SSH access"
     },
@@ -24,15 +24,16 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "echo" {
-  description       = "Allow NLB healthchecks"
+  for_each          = toset(concat(var.subnet_ids, var.nlb_subnet_ids))
+  description       = "Allow NLB health checks from ASG subnets"
   security_group_id = aws_security_group.jumphost.id
   from_port         = 7
   to_port           = 7
   ip_protocol       = "tcp"
-  cidr_ipv4         = "0.0.0.0/0"
+  cidr_ipv4         = merge(data.aws_subnet.selected, data.aws_subnet.nlb_selected)[each.key].cidr_block
   tags = merge(
     {
-      Name = "Echo access"
+      Name = "Echo access from ${each.key}"
     },
     local.tags
   )

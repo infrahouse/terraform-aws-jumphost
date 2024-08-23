@@ -23,7 +23,7 @@ resource "aws_efs_mount_target" "packages" {
 resource "aws_security_group" "efs" {
   description = "Security group for pypiserver EFS volume"
   name_prefix = "jumphost-efs-"
-  vpc_id      = data.aws_subnet.selected.vpc_id
+  vpc_id      = local.vpc_id
 
   tags = merge(
     {
@@ -34,12 +34,13 @@ resource "aws_security_group" "efs" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "efs" {
+  for_each          = toset(var.subnet_ids)
   description       = "Allow NFS traffic to EFS volume"
   security_group_id = aws_security_group.efs.id
   from_port         = 2049
   to_port           = 2049
   ip_protocol       = "tcp"
-  cidr_ipv4         = data.aws_vpc.selected.cidr_block
+  cidr_ipv4         = data.aws_subnet.selected[each.key].cidr_block
   tags = merge({
     Name = "NFS traffic"
     },
