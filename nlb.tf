@@ -11,7 +11,7 @@ resource "aws_lb" "jumphost" {
   security_groups = [
     aws_security_group.jumphost.id
   ]
-  tags = local.tags
+  tags = local.default_module_tags
 }
 
 resource "aws_lb_target_group" "jumphost" {
@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "jumphost" {
   port        = 22
   protocol    = "TCP"
   vpc_id      = local.vpc_id
-  tags        = local.tags
+  tags        = local.default_module_tags
   stickiness {
     enabled = true
     type    = "source_ip"
@@ -34,6 +34,7 @@ resource "aws_lb_listener" "jumphost" {
   load_balancer_arn = aws_lb.jumphost.arn
   port              = 22
   protocol          = "TCP"
+  tags = local.default_module_tags
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.jumphost.arn

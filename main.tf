@@ -1,5 +1,6 @@
 resource "aws_iam_policy" "required" {
   policy = data.aws_iam_policy_document.required_permissions.json
+  tags = local.default_module_tags
 }
 
 resource "random_string" "profile-suffix" {
@@ -74,7 +75,21 @@ resource "aws_launch_template" "jumphost" {
   vpc_security_group_ids = [
     aws_security_group.jumphost.id
   ]
-  tags = local.tags
+  tags = local.default_module_tags
+  tag_specifications {
+    resource_type = "volume"
+    tags = merge(
+      data.aws_default_tags.provider.tags,
+      local.default_module_tags
+    )
+  }
+  tag_specifications {
+    resource_type = "network-interface"
+    tags = merge(
+      data.aws_default_tags.provider.tags,
+      local.default_module_tags
+    )
+  }
 }
 
 resource "random_string" "asg_name" {
@@ -114,7 +129,10 @@ resource "aws_autoscaling_group" "jumphost" {
     value               = var.route53_hostname
   }
   dynamic "tag" {
-    for_each = local.tags
+    for_each = merge(
+      local.default_module_tags,
+      data.aws_default_tags.provider.tags,
+    )
     content {
       key                 = tag.key
       propagate_at_launch = true

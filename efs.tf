@@ -4,7 +4,7 @@ resource "aws_efs_file_system" "home" {
     {
       Name = "jumphost-home"
     },
-    local.tags
+    local.default_module_tags
   )
 }
 
@@ -29,7 +29,7 @@ resource "aws_security_group" "efs" {
     {
       Name : "Jumphost EFS home"
     },
-    local.tags
+    local.default_module_tags
   )
 }
 
@@ -44,7 +44,7 @@ resource "aws_vpc_security_group_ingress_rule" "efs" {
   tags = merge({
     Name = "NFS traffic"
     },
-    local.tags
+    local.default_module_tags
   )
 }
 
@@ -58,7 +58,7 @@ resource "aws_vpc_security_group_ingress_rule" "efs_icmp" {
   tags = merge({
     Name = "ICMP traffic"
     },
-    local.tags
+    local.default_module_tags
   )
 }
 
@@ -69,6 +69,6 @@ resource "aws_vpc_security_group_egress_rule" "efs" {
   tags = merge({
     Name = "EFS outgoing traffic"
     },
-    local.tags
+    local.default_module_tags
   )
 }
