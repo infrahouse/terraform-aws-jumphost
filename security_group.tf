@@ -5,7 +5,7 @@ resource "aws_security_group" "jumphost" {
   tags = merge({
     Name : "jumphost"
     },
-    local.tags
+    local.default_module_tags
   )
 }
 
@@ -19,7 +19,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
   tags = merge({
     Name = "SSH access"
     },
-    local.tags
+    local.default_module_tags
   )
 }
 
@@ -35,7 +35,7 @@ resource "aws_vpc_security_group_ingress_rule" "echo" {
     {
       Name = "Echo access from ${each.key}"
     },
-    local.tags
+    local.default_module_tags
   )
 }
 
@@ -50,7 +50,7 @@ resource "aws_vpc_security_group_ingress_rule" "icmp" {
     {
       Name = "ICMP traffic"
     },
-    local.tags
+    local.default_module_tags
   )
 }
 
@@ -63,6 +63,6 @@ resource "aws_vpc_security_group_egress_rule" "default" {
     {
       Name = "outgoing traffic"
     },
-    local.tags
+    local.default_module_tags
   )
 }

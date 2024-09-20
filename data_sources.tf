@@ -43,8 +43,8 @@ data "aws_ami" "ubuntu" {
 }
 
 data "aws_caller_identity" "current" {}
-
 data "aws_region" "current" {}
+data "aws_default_tags" "provider" {}
 
 data "aws_route53_zone" "jumphost_zone" {
   zone_id = var.route53_zone_id
