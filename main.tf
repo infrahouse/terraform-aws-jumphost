@@ -53,7 +53,23 @@ module "jumphost_userdata" {
       "0"
     ]
   ]
-  ssh_host_keys = var.ssh_host_keys
+  ssh_host_keys = var.ssh_host_keys == null ? [
+    {
+      type : "rsa"
+      private : tls_private_key.rsa.private_key_openssh
+      public : tls_private_key.rsa.public_key_openssh
+    },
+    {
+      type : "ecdsa"
+      private : tls_private_key.ecdsa.private_key_openssh
+      public : tls_private_key.ecdsa.public_key_openssh
+    },
+    {
+      type : "ed25519"
+      private : tls_private_key.ed25519.private_key_openssh
+      public : tls_private_key.ed25519.public_key_openssh
+    }
+  ] : var.ssh_host_keys
 }
 
 resource "aws_launch_template" "jumphost" {
