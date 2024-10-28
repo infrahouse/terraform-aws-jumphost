@@ -132,7 +132,7 @@ variable "ssh_host_keys" {
       }
     )
   )
-  default = []
+  default = null
 }
 
 variable "subnet_ids" {
