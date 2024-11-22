@@ -25,22 +25,4 @@ module "jumphost" {
   packages = [
     "infrahouse-puppet-data"
   ]
-  # ssh_host_keys = [
-  #   {
-  #     type : "rsa"
-  #     private : file("${path.module}/ssh_keys/ssh_host_rsa_key")
-  #     public : file("${path.module}/ssh_keys/ssh_host_rsa_key.pub")
-  #   },
-  #   {
-  #     type : "ecdsa"
-  #     private : file("${path.module}/ssh_keys/ssh_host_ecdsa_key")
-  #     public : file("${path.module}/ssh_keys/ssh_host_ecdsa_key.pub")
-  #   },
-  #   {
-  #     type : "ed25519"
-  #     private : file("${path.module}/ssh_keys/ssh_host_ed25519_key")
-  #     public : file("${path.module}/ssh_keys/ssh_host_ed25519_key.pub")
-  #   }
-  # ]
-
 }
