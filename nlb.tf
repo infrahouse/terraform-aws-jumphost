@@ -34,7 +34,7 @@ resource "aws_lb_listener" "jumphost" {
   load_balancer_arn = aws_lb.jumphost.arn
   port              = 22
   protocol          = "TCP"
-  tags = local.default_module_tags
+  tags              = local.default_module_tags
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.jumphost.arn
