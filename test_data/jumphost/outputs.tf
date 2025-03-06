@@ -9,3 +9,7 @@ output "jumphost_hostname" {
 output "jumphost_fqdn" {
   value = module.jumphost.jumphost_hostname
 }
+
+output "asg_name" {
+  value = module.jumphost.jumphost_asg_name
+}

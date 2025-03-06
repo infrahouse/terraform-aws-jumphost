@@ -4,7 +4,8 @@ resource "tls_private_key" "rsa" {
 }
 
 resource "tls_private_key" "ecdsa" {
-  algorithm = "ECDSA"
+  algorithm   = "ECDSA"
+  ecdsa_curve = "P256"
 }
 
 resource "tls_private_key" "ed25519" {
