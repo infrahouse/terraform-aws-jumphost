@@ -1,23 +1,25 @@
 import json
+import time
 from os import path as osp
+from subprocess import check_output
 from textwrap import dedent
 
 import pytest
-from infrahouse_toolkit.terraform import terraform_apply
+from pytest_infrahouse import terraform_apply
 
 from tests.conftest import (
-    DESTROY_AFTER,
     LOG,
-    REGION,
     TERRAFORM_ROOT_DIR,
-    TEST_ROLE_ARN,
-    TEST_ZONE,
-    TRACE_TERRAFORM,
 )
 
 
-@pytest.mark.parametrize("network", ["subnet_public_ids", "subnet_private_ids"])
-def test_module(service_network, ec2_client, route53_client, autoscaling_client, network):
+@pytest.mark.parametrize(
+    "network, codename",
+    [("subnet_public_ids", "noble"), ("subnet_public_ids", "jammy"), ("subnet_private_ids", "noble")],
+)
+def test_module(
+    service_network, network, codename, autoscaling_client, aws_region, test_zone_name, test_role_arn, keep_after
+):
     nlb_subnet_ids = service_network[network]["value"]
     subnet_private_ids = service_network["subnet_private_ids"]["value"]
     internet_gateway_id = service_network["internet_gateway_id"]["value"]
@@ -28,9 +30,10 @@ def test_module(service_network, ec2_client, route53_client, autoscaling_client,
         fp.write(
             dedent(
                 f"""
-                region = "{REGION}"
-                role_arn = "{TEST_ROLE_ARN}"
-                test_zone = "{TEST_ZONE}"
+                region = "{aws_region}"
+                role_arn = "{test_role_arn}"
+                test_zone = "{test_zone_name}"
+                ubuntu_codename = "{codename}"
 
                 nlb_subnet_ids = {json.dumps(nlb_subnet_ids)}
                 asg_subnet_ids = {json.dumps(subnet_private_ids)}
@@ -41,8 +44,36 @@ def test_module(service_network, ec2_client, route53_client, autoscaling_client,
 
     with terraform_apply(
         terraform_module_dir,
-        destroy_after=DESTROY_AFTER,
+        destroy_after=not keep_after,
         json_output=True,
-        enable_trace=TRACE_TERRAFORM,
     ) as tf_output:
+
         LOG.info("%s", json.dumps(tf_output, indent=4))
+        asg_name = tf_output["asg_name"]["value"]
+
+        if network == "subnet_public_ids":
+
+            LOG.info("Wait until all refreshes are done")
+
+            while True:
+                all_done = True
+                for refresh in autoscaling_client.describe_instance_refreshes(
+                    AutoScalingGroupName=asg_name,
+                )["InstanceRefreshes"]:
+                    status = refresh["Status"]
+                    if status not in [
+                        "Successful",
+                        "Failed",
+                        "Cancelled",
+                        "RollbackFailed",
+                        "RollbackSuccessful",
+                    ]:
+                        all_done = False
+                if all_done:
+                    break
+                else:
+                    time.sleep(60)
+            assert (
+                check_output(["ssh", tf_output["jumphost_fqdn"]["value"], "lsb_release -sc"]).decode().strip()
+                == codename
+            )

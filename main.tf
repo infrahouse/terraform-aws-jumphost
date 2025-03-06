@@ -24,9 +24,11 @@ module "jumphost_profile" {
 
 module "jumphost_userdata" {
   source                   = "registry.infrahouse.com/infrahouse/cloud-init/aws"
-  version                  = "1.12.4"
+  version                  = "1.17.0"
   environment              = var.environment
   role                     = "jumphost"
+  gzip_userdata            = true
+  ubuntu_codename          = var.ubuntu_codename
   custom_facts             = var.puppet_custom_facts
   puppet_debug_logging     = var.puppet_debug_logging
   puppet_environmentpath   = var.puppet_environmentpath
@@ -160,11 +162,19 @@ resource "aws_autoscaling_group" "jumphost" {
     preferences {
       min_healthy_percentage = 100
     }
+    triggers = [
+      "tag",
+    ]
   }
   tag {
     key                 = "Name"
     propagate_at_launch = true
     value               = var.route53_hostname
+  }
+  tag {
+    key                 = "ubuntu_codename"
+    propagate_at_launch = true
+    value               = var.ubuntu_codename
   }
   dynamic "tag" {
     for_each = merge(
@@ -177,8 +187,4 @@ resource "aws_autoscaling_group" "jumphost" {
       value               = tag.value
     }
   }
-}
-
-locals {
-  lifecycle_hook_wait_time = 300
 }
