@@ -1,12 +1,8 @@
-data "aws_iam_policy_document" "jumphost_permissions" {
-  source_policy_documents = var.extra_instance_profile_permissions != null ? [var.extra_instance_profile_permissions] : []
+data "aws_iam_policy_document" "required_permissions" {
   statement {
-    actions   = ["ec2:Describe*"]
+    actions   = ["ec2:DescribeInstances"]
     resources = ["*"]
   }
-}
-
-data "aws_iam_policy_document" "required_permissions" {
   statement {
     actions = ["autoscaling:DescribeAutoScalingInstances"]
     resources = [
@@ -15,12 +11,12 @@ data "aws_iam_policy_document" "required_permissions" {
   }
 }
 
-data "aws_ami" "ubuntu" {
+data "aws_ami" "ubuntu_pro" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = [local.ami_name_pattern]
+    values = [local.ami_name_pattern_pro]
   }
 
   filter {

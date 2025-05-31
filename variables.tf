@@ -1,11 +1,11 @@
 variable "ami_id" {
-  description = "AMI id for jumphost instances. By default, latest Ubuntu jammy."
+  description = "AMI id for jumphost instances. By default, latest Ubuntu Pro var.ubuntu_codename."
   type        = string
   default     = null
 }
 
 variable "asg_min_size" {
-  description = "Minimal number of EC2 instances in the ASG. By default, the number of subnets"
+  description = "Minimal number of EC2 instances in the ASG. By default, the number of subnets."
   type        = number
   default     = null
 }
@@ -18,47 +18,61 @@ variable "asg_max_size" {
 
 variable "extra_files" {
   description = "Additional files to create on an instance."
-  type = list(object({
-    content     = string
-    path        = string
-    permissions = string
-  }))
+  type = list(
+    object(
+      {
+        content     = string
+        path        = string
+        permissions = string
+      }
+    )
+  )
   default = []
 }
 
 variable "extra_policies" {
-  description = "A map of additional policy ARNs to attach to the jumphost role"
+  description = "A map of additional policy ARNs to attach to the jumphost role."
   type        = map(string)
   default     = {}
 }
 
 variable "extra_repos" {
   description = "Additional APT repositories to configure on an instance."
-  type = map(object({
-    source = string
-    key    = string
-  }))
+  type = map(
+    object(
+      {
+        source = string
+        key    = string
+      }
+    )
+  )
   default = {}
 }
 variable "instance_role_name" {
-  description = "If specified, the instance profile wil have a role with this name"
+  description = "If specified, the instance profile wil have a role with this name."
   type        = string
   default     = null
 }
 
 
 variable "instance_type" {
-  description = "EC2 Instance type"
+  description = "EC2 Instance type."
   default     = "t3a.micro"
 }
 variable "keypair_name" {
-  description = "SSH key pair name that will be added to the jumphost instance"
+  description = "SSH key pair name that will be added to the jumphost instance."
   type        = string
+  default     = null
 }
 
 variable "environment" {
-  description = "Environment name. Passed on as a puppet fact"
+  description = "Environment name. Passed on as a puppet fact."
   type        = string
+}
+
+variable "nlb_subnet_ids" {
+  description = "List of subnet ids where the NLB will be created."
+  type        = list(string)
 }
 
 variable "on_demand_base_capacity" {
@@ -74,7 +88,7 @@ variable "packages" {
 }
 
 variable "puppet_custom_facts" {
-  description = "A map of custom puppet facts"
+  description = "A map of custom puppet facts."
   type        = any
   default     = {}
 }
@@ -111,24 +125,36 @@ variable "puppet_root_directory" {
   default     = "/opt/puppet-code"
 }
 
+variable "root_volume_size" {
+  description = "Root volume size in EC2 instance in Gigabytes."
+  type        = number
+  default     = 30
+}
+
 variable "route53_zone_id" {
-  description = "Route53 zone id of a zone where this jumphost will put an A record"
+  description = "Route53 zone id of a zone where this jumphost will put an A record."
 }
 
 variable "route53_hostname" {
-  description = "An A record with this name will be created in the rout53 zone"
+  description = "An A record with this name will be created in the rout53 zone."
   type        = string
   default     = "jumphost"
 }
 
 variable "route53_ttl" {
-  description = "TTL in seconds on the route53 record"
+  description = "TTL in seconds on the route53 record."
   type        = number
   default     = 300
 }
 
+variable "sns_topic_alarm_arn" {
+  description = "ARN of SNS topic for Cloudwatch alarms on base EC2 instance."
+  type        = string
+  default     = null
+}
+
 variable "ssh_host_keys" {
-  description = "List of instance's SSH host keys"
+  description = "List of instance's SSH host keys."
   type = list(
     object(
       {
@@ -142,41 +168,12 @@ variable "ssh_host_keys" {
 }
 
 variable "subnet_ids" {
-  description = "List of subnet ids where the jumphost instances will be created"
+  description = "List of subnet ids where the jumphost instances will be created."
   type        = list(string)
-}
-
-variable "nlb_internal" {
-  description = "Not used. The value is derived from NLB's subnets map_public_ip_on_launch."
-  type        = bool
-  default     = null
-}
-
-variable "nlb_subnet_ids" {
-  description = "List of subnet ids where the NLB will be created"
-  type        = list(string)
-}
-
-variable "root_volume_size" {
-  description = "Root volume size in EC2 instance in Gigabytes"
-  type        = number
-  default     = 30
 }
 
 variable "ubuntu_codename" {
-  description = "Ubuntu version to use for the jumphost"
+  description = "Ubuntu version to use for the jumphost. Ubuntu noble+ are supported"
   type        = string
-  default     = "jammy"
-}
-
-variable "sns_topic_alarm_arn" {
-  description = "ARN of SNS topic for Cloudwatch alarms on base EC2 instance."
-  type        = string
-  default     = null
-}
-
-variable "extra_instance_profile_permissions" {
-  description = "A JSON with a permissions policy document. The policy will be attached to the ASG instance profile."
-  type        = string
-  default     = null
+  default     = "noble"
 }
