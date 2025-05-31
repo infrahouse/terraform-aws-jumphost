@@ -15,14 +15,13 @@ from tests.conftest import (
 
 @pytest.mark.parametrize(
     "network, codename",
-    [("subnet_public_ids", "noble"), ("subnet_public_ids", "jammy"), ("subnet_private_ids", "noble")],
+    [("subnet_public_ids", "noble"), ("subnet_private_ids", "noble")],
 )
 def test_module(
     service_network, network, codename, autoscaling_client, aws_region, test_zone_name, test_role_arn, keep_after
 ):
     nlb_subnet_ids = service_network[network]["value"]
     subnet_private_ids = service_network["subnet_private_ids"]["value"]
-    internet_gateway_id = service_network["internet_gateway_id"]["value"]
 
     terraform_module_dir = osp.join(TERRAFORM_ROOT_DIR, "jumphost")
 
@@ -31,16 +30,22 @@ def test_module(
             dedent(
                 f"""
                 region = "{aws_region}"
-                role_arn = "{test_role_arn}"
                 test_zone = "{test_zone_name}"
                 ubuntu_codename = "{codename}"
 
                 nlb_subnet_ids = {json.dumps(nlb_subnet_ids)}
                 asg_subnet_ids = {json.dumps(subnet_private_ids)}
-                internet_gateway_id = "{internet_gateway_id}"
                 """
             )
         )
+        if test_role_arn:
+            fp.write(
+                dedent(
+                    f"""
+                    role_arn      = "{test_role_arn}"
+                    """
+                )
+            )
 
     with terraform_apply(
         terraform_module_dir,

@@ -21,7 +21,7 @@ resource "aws_efs_mount_target" "packages" {
 }
 
 resource "aws_security_group" "efs" {
-  description = "Security group for pypiserver EFS volume"
+  description = "Security group for the EFS volume"
   name_prefix = "jumphost-efs-"
   vpc_id      = local.vpc_id
 

@@ -9,17 +9,12 @@ resource "random_string" "profile-suffix" {
 }
 
 module "jumphost_profile" {
-  source       = "registry.infrahouse.com/infrahouse/instance-profile/aws"
-  version      = "~> 1.4"
-  permissions  = data.aws_iam_policy_document.jumphost_permissions.json
-  profile_name = "jumphost-${random_string.profile-suffix.result}"
-  role_name    = var.instance_role_name
-  extra_policies = merge(
-    {
-      required : aws_iam_policy.required.arn
-    },
-    var.extra_policies
-  )
+  source         = "registry.infrahouse.com/infrahouse/instance-profile/aws"
+  version        = "1.8.1"
+  permissions    = data.aws_iam_policy_document.required_permissions.json
+  profile_name   = "jumphost-${random_string.profile-suffix.result}"
+  role_name      = var.instance_role_name
+  extra_policies = var.extra_policies
 }
 
 module "jumphost_userdata" {
@@ -74,11 +69,21 @@ module "jumphost_userdata" {
   ] : var.ssh_host_keys
 }
 
+resource "tls_private_key" "deployer" {
+  algorithm = "RSA"
+}
+
+resource "aws_key_pair" "deployer" {
+  key_name_prefix = "${local.service_name}-deployer-generated-"
+  public_key      = tls_private_key.deployer.public_key_openssh
+  tags            = local.default_module_tags
+}
+
 resource "aws_launch_template" "jumphost" {
   name_prefix   = "jumphost-"
   instance_type = var.instance_type
-  key_name      = var.keypair_name
-  image_id      = local.ami_id
+  key_name      = var.keypair_name != null ? var.keypair_name : aws_key_pair.deployer.key_name
+  image_id      = data.aws_ami.selected.id
   iam_instance_profile {
     arn = module.jumphost_profile.instance_profile_arn
   }
@@ -90,8 +95,9 @@ resource "aws_launch_template" "jumphost" {
     }
   }
   metadata_options {
-    http_tokens   = "required"
-    http_endpoint = "enabled"
+    http_tokens            = "required"
+    http_endpoint          = "enabled"
+    instance_metadata_tags = "enabled"
   }
   user_data = module.jumphost_userdata.userdata
   vpc_security_group_ids = [

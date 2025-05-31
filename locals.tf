@@ -1,5 +1,7 @@
 locals {
-  ami_id       = var.ami_id == null ? data.aws_ami.ubuntu.id : var.ami_id
+  module_version = "2.15.0"
+
+  ami_id       = var.ami_id == null ? data.aws_ami.ubuntu_pro.id : var.ami_id
   vpc_id       = data.aws_subnet.selected[var.subnet_ids[0]].vpc_id
   nlb_internal = !data.aws_subnet.nlb_selected[var.nlb_subnet_ids[0]].map_public_ip_on_launch
   default_module_tags = {
@@ -9,7 +11,6 @@ locals {
     created_by_module : "infrahouse/jumphost/aws"
 
   }
-  ami_name_pattern = contains(
-    ["focal", "jammy"], var.ubuntu_codename
-  ) ? "ubuntu/images/hvm-ssd/ubuntu-${var.ubuntu_codename}-*" : "ubuntu/images/hvm-ssd-gp3/ubuntu-${var.ubuntu_codename}-*"
+  ami_name_pattern_pro = "ubuntu-pro-server/images/hvm-ssd-gp3/ubuntu-${var.ubuntu_codename}-*"
+  service_name         = "jumphost"
 }
