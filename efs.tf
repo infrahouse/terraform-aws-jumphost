@@ -31,6 +31,9 @@ resource "aws_security_group" "efs" {
     },
     local.default_module_tags
   )
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "efs" {

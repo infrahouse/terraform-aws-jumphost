@@ -1,10 +1,10 @@
 import json
 import time
 from os import path as osp
-from subprocess import check_output
 from textwrap import dedent
 
 import pytest
+from infrahouse_core.aws.asg import ASG
 from pytest_infrahouse import terraform_apply
 
 from tests.conftest import (
@@ -18,7 +18,7 @@ from tests.conftest import (
     [("subnet_public_ids", "noble"), ("subnet_private_ids", "noble")],
 )
 def test_module(
-    service_network, network, codename, autoscaling_client, aws_region, test_zone_name, test_role_arn, keep_after
+    service_network, network, codename, aws_region, test_zone_name, test_role_arn, keep_after
 ):
     nlb_subnet_ids = service_network[network]["value"]
     subnet_private_ids = service_network["subnet_private_ids"]["value"]
@@ -55,30 +55,27 @@ def test_module(
 
         LOG.info("%s", json.dumps(tf_output, indent=4))
         asg_name = tf_output["asg_name"]["value"]
+        asg = ASG(asg_name, region=aws_region, role_arn=test_role_arn)
 
-        if network == "subnet_public_ids":
+        LOG.info("Wait until all refreshes are done")
 
-            LOG.info("Wait until all refreshes are done")
+        while True:
+            all_done = True
+            for refresh in asg.instance_refreshes:
+                status = refresh["Status"]
+                if status not in [
+                    "Successful",
+                    "Failed",
+                    "Cancelled",
+                    "RollbackFailed",
+                    "RollbackSuccessful",
+                ]:
+                    all_done = False
+            if all_done:
+                break
+            else:
+                time.sleep(60)
 
-            while True:
-                all_done = True
-                for refresh in autoscaling_client.describe_instance_refreshes(
-                    AutoScalingGroupName=asg_name,
-                )["InstanceRefreshes"]:
-                    status = refresh["Status"]
-                    if status not in [
-                        "Successful",
-                        "Failed",
-                        "Cancelled",
-                        "RollbackFailed",
-                        "RollbackSuccessful",
-                    ]:
-                        all_done = False
-                if all_done:
-                    break
-                else:
-                    time.sleep(60)
-            assert (
-                check_output(["ssh", tf_output["jumphost_fqdn"]["value"], "lsb_release -sc"]).decode().strip()
-                == codename
-            )
+        ret_code, cout, _ = asg.instances[0].execute_command("lsb_release -sc")
+        assert ret_code == 0
+        assert cout.strip() == codename
