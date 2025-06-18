@@ -17,9 +17,7 @@ from tests.conftest import (
     "network, codename",
     [("subnet_public_ids", "noble"), ("subnet_private_ids", "noble")],
 )
-def test_module(
-    service_network, network, codename, aws_region, test_zone_name, test_role_arn, keep_after
-):
+def test_module(service_network, network, codename, aws_region, test_zone_name, test_role_arn, keep_after):
     nlb_subnet_ids = service_network[network]["value"]
     subnet_private_ids = service_network["subnet_private_ids"]["value"]
 

@@ -54,9 +54,8 @@ module "jumphost" {
 }
 """
 
-def test_module(
-    service_network, aws_region, test_zone_name, test_role_arn, keep_after
-):
+
+def test_module(service_network, aws_region, test_zone_name, test_role_arn, keep_after):
     nlb_subnet_ids = service_network["subnet_private_ids"]["value"]
     subnet_private_ids = service_network["subnet_private_ids"]["value"]
 
@@ -85,7 +84,6 @@ def test_module(
 
     with open(osp.join(terraform_module_dir, "main.tf"), "w") as fp:
         fp.write(MAIN_TF_BEFORE)
-
 
     with terraform_apply(
         terraform_module_dir,
@@ -123,11 +121,10 @@ def test_module(
     with open(osp.join(terraform_module_dir, "main.tf"), "w") as fp:
         fp.write(MAIN_TF_AFTER)
 
-
     with terraform_apply(
-            terraform_module_dir,
-            destroy_after=not keep_after,
-            json_output=True,
+        terraform_module_dir,
+        destroy_after=not keep_after,
+        json_output=True,
     ) as tf_output:
 
         LOG.info("%s", json.dumps(tf_output, indent=4))
