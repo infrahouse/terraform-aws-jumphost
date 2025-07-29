@@ -1,12 +1,11 @@
 data "aws_kms_key" "efs_default" {
-  count  = var.efs_encrypted && var.efs_kms_key_id == null ? 1 : 0
   key_id = "alias/aws/elasticfilesystem"
 }
 
 resource "aws_efs_file_system" "home" {
   creation_token = "jumphost-home"
-  encrypted      = var.efs_encrypted
-  kms_key_id     = var.efs_encrypted ? (var.efs_kms_key_id != null ? var.efs_kms_key_id : data.aws_kms_key.efs_default[0].arn) : null
+  encrypted      = true
+  kms_key_id     = var.efs_kms_key_arn != null ? var.efs_kms_key_arn : data.aws_kms_key.efs_default.arn
   tags = merge(
     {
       Name = "jumphost-home"

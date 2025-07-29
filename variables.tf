@@ -65,6 +65,12 @@ variable "keypair_name" {
   default     = null
 }
 
+variable "efs_kms_key_arn" {
+  description = "KMS key ARN to use for EFS encryption. If not specified, AWS will use the default AWS managed key for EFS."
+  type        = string
+  default     = null
+}
+
 variable "environment" {
   description = "Environment name. Passed on as a puppet fact."
   type        = string
@@ -173,19 +179,7 @@ variable "subnet_ids" {
 }
 
 variable "ubuntu_codename" {
-  description = "Ubuntu version to use for the jumphost. Ubuntu noble+ are supported"
+  description = "Ubuntu version to use for the jumphost. Only Ubuntu noble is supported ATM."
   type        = string
   default     = "noble"
-}
-
-variable "efs_kms_key_id" {
-  description = "KMS key ID to use for EFS encryption. If not specified, AWS will use the default AWS managed key for EFS."
-  type        = string
-  default     = null
-}
-
-variable "efs_encrypted" {
-  description = "Whether to enable encryption for the EFS file system."
-  type        = bool
-  default     = true
 }
