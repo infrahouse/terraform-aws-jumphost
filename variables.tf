@@ -177,3 +177,15 @@ variable "ubuntu_codename" {
   type        = string
   default     = "noble"
 }
+
+variable "efs_kms_key_id" {
+  description = "KMS key ID to use for EFS encryption. If not specified, AWS will use the default AWS managed key for EFS."
+  type        = string
+  default     = null
+}
+
+variable "efs_encrypted" {
+  description = "Whether to enable encryption for the EFS file system."
+  type        = bool
+  default     = false
+}
