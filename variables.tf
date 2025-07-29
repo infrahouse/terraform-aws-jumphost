@@ -187,5 +187,5 @@ variable "efs_kms_key_id" {
 variable "efs_encrypted" {
   description = "Whether to enable encryption for the EFS file system."
   type        = bool
-  default     = false
+  default     = true
 }
