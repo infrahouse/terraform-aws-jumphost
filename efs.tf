@@ -1,5 +1,11 @@
+data "aws_kms_key" "efs_default" {
+  key_id = "alias/aws/elasticfilesystem"
+}
+
 resource "aws_efs_file_system" "home" {
   creation_token = "jumphost-home"
+  encrypted      = true
+  kms_key_id     = var.efs_kms_key_arn != null ? var.efs_kms_key_arn : data.aws_kms_key.efs_default.arn
   tags = merge(
     {
       Name = "jumphost-home"

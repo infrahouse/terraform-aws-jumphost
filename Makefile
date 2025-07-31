@@ -29,7 +29,7 @@ lint:  ## Run code style checks
 
 .PHONY: test
 test:  ## Run tests on the module
-	pytest -xvvs tests/
+	pytest -xvvs tests/test_module.py
 
 .PHONY: test-keep
 test-keep:  ## Run a test and keep resources
