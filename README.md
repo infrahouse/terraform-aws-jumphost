@@ -29,7 +29,7 @@ thereby enhancing the overall reliability and user experience.
 ```hcl
 module "jumphost" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
-  version = "3.2.0"
+  version = "3.2.1"
 
   subnet_ids        = module.management.subnet_public_ids
   environment       = var.environment
