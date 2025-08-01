@@ -14,7 +14,7 @@ resource "aws_efs_file_system" "home-enc" {
   )
 }
 
-resource "aws_efs_mount_target" "packages" {
+resource "aws_efs_mount_target" "home-enc" {
   for_each       = toset(var.subnet_ids)
   file_system_id = aws_efs_file_system.home-enc.id
   subnet_id      = each.key
