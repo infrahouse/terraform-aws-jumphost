@@ -1,24 +1,24 @@
-# resource "aws_efs_file_system" "home" {
-#   creation_token = "jumphost-home"
-#   tags = merge(
-#     {
-#       Name = "jumphost-home"
-#     },
-#     local.default_module_tags
-#   )
-# }
-#
-# resource "aws_efs_mount_target" "packages" {
-#   for_each       = toset(var.subnet_ids)
-#   file_system_id = aws_efs_file_system.home.id
-#   subnet_id      = each.key
-#   security_groups = [
-#     aws_security_group.efs.id
-#   ]
-#   lifecycle {
-#     create_before_destroy = false
-#   }
-# }
+resource "aws_efs_file_system" "home" {
+  creation_token = "jumphost-home"
+  tags = merge(
+    {
+      Name = "jumphost-home"
+    },
+    local.default_module_tags
+  )
+}
+
+resource "aws_efs_mount_target" "packages" {
+  for_each       = toset(var.subnet_ids)
+  file_system_id = aws_efs_file_system.home.id
+  subnet_id      = each.key
+  security_groups = [
+    aws_security_group.efs.id
+  ]
+  lifecycle {
+    create_before_destroy = false
+  }
+}
 
 resource "aws_security_group" "efs" {
   description = "Security group for the EFS volume"
