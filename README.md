@@ -1,33 +1,24 @@
 # terraform-aws-jumphost
 
-The module creates a jump host to provide SSH access to the AWS network.
+The module creates a jump host to provide SSH access to AWS network resources not accessible from the internet.
 
 ![jumphost](https://github.com/infrahouse/terraform-aws-jumphost/assets/1763754/c4e0bf15-c7c6-4bab-8399-a7b5b711bfbc)
 
-The module deploys an autoscaling group that serves as a jump host
-to access internal resources not accessible from the Internet otherwise.
+## Overview
 
-To facilitate this access, the autoscaling group is fronted by a network load balancer (NLB), 
-which distributes incoming traffic to the EC2 instances within the group. 
-It is crucial that the load balancer is deployed in a public subnet to ensure it can obtain a public IP address, 
-thereby allowing external SSH connections. 
-If your architecture includes a VPN gateway, you may opt to place the autoscaling group in a private subnet; 
-however, this configuration will require additional considerations for routing and access management.
+The module deploys an autoscaling group fronted by a Network Load Balancer (NLB) in public subnets.
+The jump host instances use Ubuntu Pro images for enhanced security and mount an EFS volume at
+`/home` to preserve user data during instance refresh operations.
 
-The autoscaling group utilizes Ubuntu Pro images, 
-which are specifically designed to provide enhanced security features and compliance. 
-Ubuntu Pro includes advanced security updates, extended support, and access to a comprehensive set of compliance certifications, 
-making it an ideal choice for organizations that prioritize security in their cloud environments. 
-By leveraging these images, users can ensure that their jump host instances benefit from the latest security patches 
-and best practices, thereby reducing vulnerabilities and maintaining a robust security posture.
-
-The EC2 instance is configured to mount an Amazon EFS (Elastic File System) volume at the `/home` directory. 
-This setup ensures that user data is preserved during instance refresh operations, which replace the EC2 instance. 
-By utilizing EFS, users can maintain continuity and access to their data, even as instances are updated or replaced, 
-thereby enhancing the overall reliability and user experience.
+**Key Features:**
+- Network Load Balancer for high availability SSH access
+- Ubuntu Pro images with security updates and compliance certifications
+- EFS-backed `/home` directory for data persistence
+- Least-privilege IAM permissions with extensible policy support
+- CloudWatch monitoring and alarms
 
 ```hcl
-module "jumphost" {
+  module "jumphost" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
   version = "4.1.0"
 
@@ -38,49 +29,56 @@ module "jumphost" {
   extra_policies = {
     (aws_iam_policy.package-publisher.name) : aws_iam_policy.package-publisher.arn
   }
-  gpg_public_key = file("./files/DEB-GPG-KEY-infrahouse-noble")
 }
 ```
 
 ## IAM instance profile
 
-The module creates an instance profile called `jumphost` 
-using the [instance-profile](https://registry.terraform.io/modules/infrahouse/instance-profile/aws/latest) module.
+The module creates an instance profile called `jumphost` using the [instance-profile](https://registry.terraform.io/modules/infrahouse/instance-profile/aws/latest) module.
 
-This instance profile is associated with a role that implements a restrictive permissions policy,
-ensuring that the EC2 instance operates with the principle of least privilege.
-The policy allows only essential actions, such as describing EC2 instances and retrieving information about
-the instances within the autoscaling group, thereby enhancing security while maintaining necessary functionality.
+The instance profile follows the **principle of least privilege**, granting only essential permissions:
 
 ```hcl
-data "aws_iam_policy_document" "jumphost_permissions" {
-  statement {
-    actions   = ["ec2:DescribeInstances"]
-    resources = ["*"]
+  data "aws_iam_policy_document" "jumphost_permissions" {
+    statement {
+      actions   = ["ec2:DescribeInstances"]
+      resources = ["*"]
+    }
+    statement {
+      actions = ["autoscaling:DescribeAutoScalingInstances"]
+      resources = [
+        aws_autoscaling_group.jumphost.arn
+      ]
+    }
   }
-  statement {
-    actions = ["autoscaling:DescribeAutoScalingInstances"]
-    resources = [
-      aws_autoscaling_group.jumphost.arn
-    ]
-  }
-}
 ```
 
-If you need the jump host to have more permissions, attach additional policies to the role.
-The role is returned as outputs `jumphost_role_name` and `jumphost_role_arn`.
+### Adding additional permissions
 
-Alternatively, you can specify a map of additional permissions in the `var.extra_policies` map:
+**Method 1**: Attach policies to the existing role
 
 ```hcl
-module "jumphost" {
-...
-  extra_policies = {
-    (aws_iam_policy.package-publisher.name) : aws_iam_policy.package-publisher.arn
+  resource "aws_iam_role_policy_attachment" "additional" {
+    role       = module.jumphost.jumphost_role_name
+    policy_arn = aws_iam_policy.your_policy.arn
   }
-...
-}
 ```
+
+**Method 2**: Use the extra_policies variable
+
+```hcl
+  module "jumphost" {
+    # ... other configuration ...
+    extra_policies = {
+      "s3-access"    = aws_iam_policy.s3_policy.arn
+      "ssm-access"   = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    }
+  }
+
+```
+
+> Note: The jumphost role name and ARN are available as outputs: `jumphost_role_name` and `jumphost_role_arn`.
+
 ## Requirements
 
 | Name | Version |
