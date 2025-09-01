@@ -20,7 +20,7 @@ The jump host instances use Ubuntu Pro images for enhanced security and mount an
 ```hcl
   module "jumphost" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
-  version = "4.1.0"
+  version = "4.2.0"
 
   subnet_ids        = module.management.subnet_public_ids
   environment       = var.environment

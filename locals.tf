@@ -1,5 +1,5 @@
 locals {
-  module_version = "4.1.0"
+  module_version = "4.2.0"
 
   ami_id       = var.ami_id == null ? data.aws_ami.ubuntu_pro.id : var.ami_id
   vpc_id       = data.aws_subnet.selected[var.subnet_ids[0]].vpc_id
