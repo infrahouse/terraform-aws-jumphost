@@ -1,6 +1,7 @@
 import json
 import time
-from os import path as osp
+from os import path as osp, remove
+from shutil import rmtree
 from textwrap import dedent
 
 import pytest
@@ -13,15 +14,48 @@ from tests.conftest import (
 )
 
 
+@pytest.mark.parametrize("aws_provider_version", ["~> 5.31", "~> 6.0"])
 @pytest.mark.parametrize(
     "network, codename",
     [("subnet_public_ids", "noble"), ("subnet_private_ids", "noble")],
 )
-def test_module(service_network, network, codename, aws_region, test_zone_name, test_role_arn, keep_after):
+def test_module(
+    aws_provider_version, service_network, network, codename, aws_region, test_zone_name, test_role_arn, keep_after
+):
     nlb_subnet_ids = service_network[network]["value"]
     subnet_private_ids = service_network["subnet_private_ids"]["value"]
 
     terraform_module_dir = osp.join(TERRAFORM_ROOT_DIR, "jumphost")
+
+    # Delete .terraform directory and .terraform.lock.hcl to allow provider version changes
+    terraform_dir_path = osp.join(terraform_module_dir, ".terraform")
+    lock_file_path = osp.join(terraform_module_dir, ".terraform.lock.hcl")
+
+    try:
+        rmtree(terraform_dir_path)
+    except FileNotFoundError:
+        pass
+
+    try:
+        remove(lock_file_path)
+    except FileNotFoundError:
+        pass
+
+    # Update provider version
+    with open(f"{terraform_module_dir}/terraform.tf", "w") as fp:
+        fp.write(
+            f"""
+            terraform {{
+                required_version = "~> 1.0"
+                required_providers {{
+                    aws = {{
+                      source  = "hashicorp/aws"
+                      version = "{aws_provider_version}"
+                    }}
+                  }}
+                }}
+            """
+        )
 
     with open(osp.join(terraform_module_dir, "terraform.tfvars"), "w") as fp:
         fp.write(
