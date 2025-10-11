@@ -14,6 +14,7 @@ The jump host instances use Ubuntu Pro images for enhanced security and mount an
 - Network Load Balancer for high availability SSH access
 - Ubuntu Pro images with security updates and compliance certifications
 - EFS-backed `/home` directory for data persistence
+- Encrypted EFS file system with optional custom KMS key support
 - Least-privilege IAM permissions with extensible policy support
 - CloudWatch monitoring and alarms
 
@@ -25,12 +26,38 @@ The jump host instances use Ubuntu Pro images for enhanced security and mount an
   subnet_ids        = module.management.subnet_public_ids
   environment       = var.environment
   route53_zone_id   = module.infrahouse_com.infrahouse_zone_id
-  route53_zone_name = module.infrahouse_com.infrahouse_zone_name
+  route53_hostname  = "basion"  # jumphost by default
   extra_policies = {
     (aws_iam_policy.package-publisher.name) : aws_iam_policy.package-publisher.arn
   }
 }
 ```
+## Deploying Multiple Jumphosts
+
+When deploying multiple jumphost instances in the same AWS account, 
+you must provide a unique `efs_creation_token` for each deployment to avoid EFS conflicts:
+
+  ```hcl
+  module "jumphost_prod" {
+  source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
+  version = "4.2.0"
+
+  efs_creation_token = "jumphost-home-prod"
+  environment        = "production"
+  # ... other configuration ...
+}
+
+module "jumphost_staging" {
+  source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
+  version = "4.2.0"
+
+  efs_creation_token = "jumphost-home-staging"
+  environment        = "staging"
+  # ... other configuration ...
+}
+
+Note: Changing efs_creation_token on an existing deployment will destroy and recreate the EFS file system, 
+resulting in data loss. Plan carefully when modifying this value.
 
 ## IAM instance profile
 
@@ -78,14 +105,11 @@ The instance profile follows the **principle of least privilege**, granting only
 ```
 
 > Note: The jumphost role name and ARN are available as outputs: `jumphost_role_name` and `jumphost_role_arn`.
-
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.31 |
-| <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | >= 2.3 |
-| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.31, < 7.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.5 |
 | <a name="requirement_tls"></a> [tls](#requirement\_tls) | >= 4.0 |
 
@@ -93,16 +117,16 @@ The instance profile follows the **principle of least privilege**, granting only
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | 4.1.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.31, < 7.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.5 |
+| <a name="provider_tls"></a> [tls](#provider\_tls) | >= 4.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_jumphost_profile"></a> [jumphost\_profile](#module\_jumphost\_profile) | registry.infrahouse.com/infrahouse/instance-profile/aws | 1.8.1 |
-| <a name="module_jumphost_userdata"></a> [jumphost\_userdata](#module\_jumphost\_userdata) | registry.infrahouse.com/infrahouse/cloud-init/aws | 1.18.0 |
+| <a name="module_jumphost_profile"></a> [jumphost\_profile](#module\_jumphost\_profile) | registry.infrahouse.com/infrahouse/instance-profile/aws | 1.9.0 |
+| <a name="module_jumphost_userdata"></a> [jumphost\_userdata](#module\_jumphost\_userdata) | registry.infrahouse.com/infrahouse/cloud-init/aws | 2.2.2 |
 
 ## Resources
 
@@ -153,17 +177,18 @@ The instance profile follows the **principle of least privilege**, granting only
 | <a name="input_ami_id"></a> [ami\_id](#input\_ami\_id) | AMI id for jumphost instances. By default, latest Ubuntu Pro var.ubuntu\_codename. | `string` | `null` | no |
 | <a name="input_asg_max_size"></a> [asg\_max\_size](#input\_asg\_max\_size) | Maximum number of EC2 instances in the ASG. By default, the number of subnets plus one | `number` | `null` | no |
 | <a name="input_asg_min_size"></a> [asg\_min\_size](#input\_asg\_min\_size) | Minimal number of EC2 instances in the ASG. By default, the number of subnets. | `number` | `null` | no |
+| <a name="input_efs_creation_token"></a> [efs\_creation\_token](#input\_efs\_creation\_token) | A unique name used as reference when creating the EFS file system. Must be unique across all EFS file systems in the AWS account. Change this value when creating multiple jumphosts to avoid conflicts. | `string` | `"jumphost-home-encrypted"` | no |
 | <a name="input_efs_kms_key_arn"></a> [efs\_kms\_key\_arn](#input\_efs\_kms\_key\_arn) | KMS key ARN to use for EFS encryption. If not specified, AWS will use the default AWS managed key for EFS. | `string` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name. Passed on as a puppet fact. | `string` | n/a | yes |
 | <a name="input_extra_files"></a> [extra\_files](#input\_extra\_files) | Additional files to create on an instance. | <pre>list(<br/>    object(<br/>      {<br/>        content     = string<br/>        path        = string<br/>        permissions = string<br/>      }<br/>    )<br/>  )</pre> | `[]` | no |
 | <a name="input_extra_policies"></a> [extra\_policies](#input\_extra\_policies) | A map of additional policy ARNs to attach to the jumphost role. | `map(string)` | `{}` | no |
 | <a name="input_extra_repos"></a> [extra\_repos](#input\_extra\_repos) | Additional APT repositories to configure on an instance. | <pre>map(<br/>    object(<br/>      {<br/>        source = string<br/>        key    = string<br/>      }<br/>    )<br/>  )</pre> | `{}` | no |
-| <a name="input_instance_role_name"></a> [instance\_role\_name](#input\_instance\_role\_name) | If specified, the instance profile wil have a role with this name. | `string` | `null` | no |
+| <a name="input_instance_role_name"></a> [instance\_role\_name](#input\_instance\_role\_name) | If specified, the instance profile will have a role with this name. | `string` | `null` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | EC2 Instance type. | `string` | `"t3a.micro"` | no |
 | <a name="input_keypair_name"></a> [keypair\_name](#input\_keypair\_name) | SSH key pair name that will be added to the jumphost instance. | `string` | `null` | no |
 | <a name="input_nlb_subnet_ids"></a> [nlb\_subnet\_ids](#input\_nlb\_subnet\_ids) | List of subnet ids where the NLB will be created. | `list(string)` | n/a | yes |
 | <a name="input_on_demand_base_capacity"></a> [on\_demand\_base\_capacity](#input\_on\_demand\_base\_capacity) | If specified, the ASG will request spot instances and this will be the minimal number of on-demand instances. | `number` | `null` | no |
-| <a name="input_packages"></a> [packages](#input\_packages) | List of packages to install when the instances bootstraps. | `list(string)` | `[]` | no |
+| <a name="input_packages"></a> [packages](#input\_packages) | List of packages to install when the instance bootstraps. | `list(string)` | `[]` | no |
 | <a name="input_puppet_custom_facts"></a> [puppet\_custom\_facts](#input\_puppet\_custom\_facts) | A map of custom puppet facts. | `any` | `{}` | no |
 | <a name="input_puppet_debug_logging"></a> [puppet\_debug\_logging](#input\_puppet\_debug\_logging) | Enable debug logging if true. | `bool` | `false` | no |
 | <a name="input_puppet_environmentpath"></a> [puppet\_environmentpath](#input\_puppet\_environmentpath) | A path for directory environments. | `string` | `"{root_directory}/environments"` | no |
@@ -172,9 +197,9 @@ The instance profile follows the **principle of least privilege**, granting only
 | <a name="input_puppet_module_path"></a> [puppet\_module\_path](#input\_puppet\_module\_path) | Path to common puppet modules. | `string` | `"{root_directory}/environments/{environment}/modules:{root_directory}/modules"` | no |
 | <a name="input_puppet_root_directory"></a> [puppet\_root\_directory](#input\_puppet\_root\_directory) | Path where the puppet code is hosted. | `string` | `"/opt/puppet-code"` | no |
 | <a name="input_root_volume_size"></a> [root\_volume\_size](#input\_root\_volume\_size) | Root volume size in EC2 instance in Gigabytes. | `number` | `30` | no |
-| <a name="input_route53_hostname"></a> [route53\_hostname](#input\_route53\_hostname) | An A record with this name will be created in the rout53 zone. | `string` | `"jumphost"` | no |
-| <a name="input_route53_ttl"></a> [route53\_ttl](#input\_route53\_ttl) | TTL in seconds on the route53 record. | `number` | `300` | no |
-| <a name="input_route53_zone_id"></a> [route53\_zone\_id](#input\_route53\_zone\_id) | Route53 zone id of a zone where this jumphost will put an A record. | `any` | n/a | yes |
+| <a name="input_route53_hostname"></a> [route53\_hostname](#input\_route53\_hostname) | An A record with this name will be created in the Route53 zone. | `string` | `"jumphost"` | no |
+| <a name="input_route53_ttl"></a> [route53\_ttl](#input\_route53\_ttl) | TTL in seconds on the Route53 record. | `number` | `300` | no |
+| <a name="input_route53_zone_id"></a> [route53\_zone\_id](#input\_route53\_zone\_id) | Route53 zone id of a zone where this jumphost will put an A record. | `string` | n/a | yes |
 | <a name="input_sns_topic_alarm_arn"></a> [sns\_topic\_alarm\_arn](#input\_sns\_topic\_alarm\_arn) | ARN of SNS topic for Cloudwatch alarms on base EC2 instance. | `string` | `null` | no |
 | <a name="input_ssh_host_keys"></a> [ssh\_host\_keys](#input\_ssh\_host\_keys) | List of instance's SSH host keys. | <pre>list(<br/>    object(<br/>      {<br/>        type : string<br/>        private : string<br/>        public : string<br/>      }<br/>    )<br/>  )</pre> | `null` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnet ids where the jumphost instances will be created. | `list(string)` | n/a | yes |

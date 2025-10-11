@@ -22,6 +22,12 @@ variable "efs_creation_token" {
   default     = "jumphost-home-encrypted"
 }
 
+variable "efs_kms_key_arn" {
+  description = "KMS key ARN to use for EFS encryption. If not specified, AWS will use the default AWS managed key for EFS."
+  type        = string
+  default     = null
+}
+
 variable "extra_files" {
   description = "Additional files to create on an instance."
   type = list(
@@ -54,25 +60,21 @@ variable "extra_repos" {
   )
   default = {}
 }
+
 variable "instance_role_name" {
-  description = "If specified, the instance profile wil have a role with this name."
+  description = "If specified, the instance profile will have a role with this name."
   type        = string
   default     = null
 }
-
 
 variable "instance_type" {
   description = "EC2 Instance type."
+  type        = string
   default     = "t3a.micro"
 }
+
 variable "keypair_name" {
   description = "SSH key pair name that will be added to the jumphost instance."
-  type        = string
-  default     = null
-}
-
-variable "efs_kms_key_arn" {
-  description = "KMS key ARN to use for EFS encryption. If not specified, AWS will use the default AWS managed key for EFS."
   type        = string
   default     = null
 }
@@ -94,7 +96,7 @@ variable "on_demand_base_capacity" {
 }
 
 variable "packages" {
-  description = "List of packages to install when the instances bootstraps."
+  description = "List of packages to install when the instance bootstraps."
   type        = list(string)
   default     = []
 }
@@ -113,11 +115,13 @@ variable "puppet_debug_logging" {
 
 variable "puppet_environmentpath" {
   description = "A path for directory environments."
+  type        = string
   default     = "{root_directory}/environments"
 }
 
 variable "puppet_hiera_config_path" {
   description = "Path to hiera configuration file."
+  type        = string
   default     = "{root_directory}/environments/{environment}/hiera.yaml"
 }
 
@@ -129,11 +133,13 @@ variable "puppet_manifest" {
 
 variable "puppet_module_path" {
   description = "Path to common puppet modules."
+  type        = string
   default     = "{root_directory}/environments/{environment}/modules:{root_directory}/modules"
 }
 
 variable "puppet_root_directory" {
   description = "Path where the puppet code is hosted."
+  type        = string
   default     = "/opt/puppet-code"
 }
 
@@ -145,16 +151,17 @@ variable "root_volume_size" {
 
 variable "route53_zone_id" {
   description = "Route53 zone id of a zone where this jumphost will put an A record."
+  type        = string
 }
 
 variable "route53_hostname" {
-  description = "An A record with this name will be created in the rout53 zone."
+  description = "An A record with this name will be created in the Route53 zone."
   type        = string
   default     = "jumphost"
 }
 
 variable "route53_ttl" {
-  description = "TTL in seconds on the route53 record."
+  description = "TTL in seconds on the Route53 record."
   type        = number
   default     = 300
 }
