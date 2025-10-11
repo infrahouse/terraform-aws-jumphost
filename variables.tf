@@ -16,6 +16,12 @@ variable "asg_max_size" {
   default     = null
 }
 
+variable "efs_creation_token" {
+  description = "A unique name used as reference when creating the EFS file system. Must be unique across all EFS file systems in the AWS account. Change this value when creating multiple jumphosts to avoid conflicts."
+  type        = string
+  default     = "jumphost-home-encrypted"
+}
+
 variable "extra_files" {
   description = "Additional files to create on an instance."
   type = list(
