@@ -1,5 +1,5 @@
 resource "aws_efs_file_system" "home-enc" {
-  creation_token = "jumphost-home-encrypted"
+  creation_token = var.efs_creation_token
   encrypted      = true
   kms_key_id     = var.efs_kms_key_arn != null ? var.efs_kms_key_arn : data.aws_kms_key.efs_default.arn
   protection {
