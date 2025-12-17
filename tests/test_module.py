@@ -1,5 +1,4 @@
 import json
-import time
 from os import path as osp, remove
 from shutil import rmtree
 from textwrap import dedent
@@ -7,6 +6,7 @@ from textwrap import dedent
 import pytest
 from infrahouse_core.aws.asg import ASG
 from pytest_infrahouse import terraform_apply
+from pytest_infrahouse.utils import wait_for_instance_refresh
 
 from tests.conftest import (
     LOG,
@@ -14,15 +14,15 @@ from tests.conftest import (
 )
 
 
-@pytest.mark.parametrize("aws_provider_version", ["~> 5.31", "~> 6.0"])
+@pytest.mark.parametrize("aws_provider_version", ["~> 5.31", "~> 6.0"], ids=["aws-5", "aws-6"])
 @pytest.mark.parametrize(
-    "network, codename",
-    [("subnet_public_ids", "noble"), ("subnet_private_ids", "noble")],
+    "codename",
+    ["noble"],
 )
 def test_module(
-    aws_provider_version, service_network, network, codename, aws_region, test_zone_name, test_role_arn, keep_after
+    aws_provider_version, service_network, codename, aws_region, subzone, test_role_arn, keep_after, autoscaling_client
 ):
-    nlb_subnet_ids = service_network[network]["value"]
+    nlb_subnet_ids = service_network["subnet_private_ids"]["value"]
     subnet_private_ids = service_network["subnet_private_ids"]["value"]
 
     terraform_module_dir = osp.join(TERRAFORM_ROOT_DIR, "jumphost")
@@ -62,7 +62,7 @@ def test_module(
             dedent(
                 f"""
                 region = "{aws_region}"
-                test_zone = "{test_zone_name}"
+                test_zone_id = "{subzone["subzone_id"]["value"]}"
                 ubuntu_codename = "{codename}"
 
                 nlb_subnet_ids = {json.dumps(nlb_subnet_ids)}
@@ -89,24 +89,10 @@ def test_module(
         asg_name = tf_output["asg_name"]["value"]
         asg = ASG(asg_name, region=aws_region, role_arn=test_role_arn)
 
-        LOG.info("Wait until all refreshes are done")
-
-        while True:
-            all_done = True
-            for refresh in asg.instance_refreshes:
-                status = refresh["Status"]
-                if status not in [
-                    "Successful",
-                    "Failed",
-                    "Cancelled",
-                    "RollbackFailed",
-                    "RollbackSuccessful",
-                ]:
-                    all_done = False
-            if all_done:
-                break
-            else:
-                time.sleep(60)
+        # Wait for any in-progress instance refreshes to complete
+        wait_for_instance_refresh(
+            asg_name=asg_name, autoscaling_client=autoscaling_client, timeout=3600, poll_interval=60
+        )
 
         ret_code, cout, _ = asg.instances[0].execute_command("lsb_release -sc")
         assert ret_code == 0
