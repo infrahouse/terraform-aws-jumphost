@@ -12,6 +12,7 @@ endef
 export PRINT_HELP_PYSCRIPT
 TEST_REGION="us-west-2"
 TEST_ROLE="arn:aws:iam::303467602807:role/jumphost-tester"
+TEST_FILTER ?= aws-6
 
 help: install-hooks
 	@python -c "$$PRINT_HELP_PYSCRIPT" < Makefile
@@ -37,7 +38,7 @@ test-keep:  ## Run a test and keep resources
 		--aws-region=${TEST_REGION} \
 		--test-role-arn=${TEST_ROLE} \
 		--keep-after \
-		-k subnet_private_ids \
+		-k '${TEST_FILTER}' \
 		tests/test_module.py
 
 .PHONY: test-clean
@@ -45,29 +46,9 @@ test-clean:  ## Run a test and destroy resources
 	pytest -xvvs \
 		--aws-region=${TEST_REGION} \
 		--test-role-arn=${TEST_ROLE} \
-		-k subnet_private_ids \
+		-k '${TEST_FILTER}' \
 		tests/test_module.py
 
-.PHONY: test-migration
-test-migration:  ## Run a migration test
-	pytest -xvvs \
-		--aws-region=${TEST_REGION} \
-		--test-role-arn=${TEST_ROLE} \
-		--keep-after \
-		tests/test_migration.py
-
-.PHONY: test-migration-clean
-test-migration-clean:  ## Remove the migration test resources
-	@if [ -d test_data/jumphost-2.9 ]; then \
-		cd test_data/jumphost-2.9 && terraform destroy; \
-	else \
-		echo "Directory test_data/jumphost-2.9 does not exist"; \
-	fi
-	@if [ -d "$$(python -c 'import pytest_infrahouse; print(pytest_infrahouse.__path__[0])')/data/service-network/" ]; then \
-		cd "$$(python -c 'import pytest_infrahouse; print(pytest_infrahouse.__path__[0])')/data/service-network/" && terraform destroy; \
-	else \
-		echo "Directory for service-network does not exist"; \
-	fi
 .PHONY: bootstrap
 bootstrap: ## bootstrap the development environment
 	pip install -U "pip ~= 25.2"

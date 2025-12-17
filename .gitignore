@@ -7,3 +7,8 @@ __pycache__
 *.zip
 terraform.tfvars
 .terraform.tfstate.lock.info
+
+# Claude Code local settings
+.claude/*.local.json
+.claude/reviews/
+nul
