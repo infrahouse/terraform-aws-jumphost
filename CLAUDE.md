@@ -18,6 +18,15 @@ a Network Load Balancer in public subnets, using Ubuntu Pro images with EFS-back
 - **dns.tf**: Route53 DNS record configuration
 - **ssh.tf**: SSH host keys generation and management
 - **cloudwatch.tf**: Monitoring and alerting configuration
+- **cloudwatch-logs.tf**: CloudWatch Logs configuration for security audit trails
+
+### CloudWatch Integration
+- **Always-on CloudWatch logging** at `/aws/ec2/jumphost/{environment}`
+- IAM permissions automatically configured for CloudWatch agent
+- Log group name passed to instances via Puppet facts for agent configuration
+- Default 365-day retention for compliance (configurable via `log_retention_days`)
+- Optional custom KMS key support via `cloudwatch_kms_key_arn`
+- CloudWatch agent installation and configuration is managed by Puppet
 
 ### Dependencies
 - Uses InfraHouse modules:
@@ -107,3 +116,4 @@ Key outputs available for integration:
 - `jumphost_asg_name`: Autoscaling group name
 - `jumphost_role_name` / `jumphost_role_arn`: IAM role for permission attachments
 - `jumphost_instance_profile_name` / `jumphost_instance_profile__arn`: Instance profile details
+- `cloudwatch_log_group_name` / `cloudwatch_log_group_arn`: CloudWatch log group for audit trails

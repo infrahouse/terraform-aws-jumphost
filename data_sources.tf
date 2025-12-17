@@ -74,3 +74,11 @@ data "aws_ami" "selected" {
 data "aws_kms_key" "efs_default" {
   key_id = "alias/aws/elasticfilesystem"
 }
+
+# Combine all required permissions
+data "aws_iam_policy_document" "combined_permissions" {
+  source_policy_documents = [
+    data.aws_iam_policy_document.required_permissions.json,
+    data.aws_iam_policy_document.cloudwatch_logs.json
+  ]
+}
