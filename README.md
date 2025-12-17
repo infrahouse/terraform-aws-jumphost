@@ -21,7 +21,7 @@ The jump host instances use Ubuntu Pro images for enhanced security and mount an
 ```hcl
   module "jumphost" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
-  version = "4.3.0"
+  version = "4.4.0"
 
   subnet_ids        = module.management.subnet_public_ids
   environment       = var.environment
@@ -40,7 +40,7 @@ you must provide a unique `efs_creation_token` for each deployment to avoid EFS 
   ```hcl
   module "jumphost_prod" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
-  version = "4.3.0"
+  version = "4.4.0"
 
   efs_creation_token = "jumphost-home-prod"
   environment        = "production"
@@ -49,7 +49,7 @@ you must provide a unique `efs_creation_token` for each deployment to avoid EFS 
 
 module "jumphost_staging" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
-  version = "4.3.0"
+  version = "4.4.0"
 
   efs_creation_token = "jumphost-home-staging"
   environment        = "staging"
