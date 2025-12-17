@@ -13,3 +13,11 @@ output "jumphost_fqdn" {
 output "asg_name" {
   value = module.jumphost.jumphost_asg_name
 }
+
+output "cloudwatch_log_group_name" {
+  value = module.jumphost.cloudwatch_log_group_name
+}
+
+output "cloudwatch_log_group_arn" {
+  value = module.jumphost.cloudwatch_log_group_arn
+}

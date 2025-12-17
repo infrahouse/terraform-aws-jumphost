@@ -16,7 +16,7 @@ resource "aws_cloudwatch_log_group" "jumphost" {
   tags = merge(
     local.default_module_tags,
     {
-      Purpose = "Security and compliance logging"
+      purpose = "Security and compliance logging"
     }
   )
 }
@@ -28,7 +28,6 @@ data "aws_iam_policy_document" "cloudwatch_logs" {
     sid    = "CloudWatchLogs"
     effect = "Allow"
     actions = [
-      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
       "logs:DescribeLogStreams"

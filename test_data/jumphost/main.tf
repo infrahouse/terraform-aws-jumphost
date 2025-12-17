@@ -20,4 +20,7 @@ module "jumphost" {
   packages = [
     "infrahouse-puppet-data"
   ]
+
+  # CloudWatch configuration for testing
+  log_retention_days = 7 # Short retention for testing
 }

@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "required" {
-  policy = data.aws_iam_policy_document.required_permissions.json
+  policy = data.aws_iam_policy_document.combined_permissions.json
   tags   = local.default_module_tags
 }
 
@@ -11,20 +11,28 @@ resource "random_string" "profile-suffix" {
 module "jumphost_profile" {
   source         = "registry.infrahouse.com/infrahouse/instance-profile/aws"
   version        = "1.9.0"
-  permissions    = data.aws_iam_policy_document.required_permissions.json
+  permissions    = data.aws_iam_policy_document.combined_permissions.json
   profile_name   = "jumphost-${random_string.profile-suffix.result}"
   role_name      = var.instance_role_name
   extra_policies = var.extra_policies
 }
 
 module "jumphost_userdata" {
-  source                   = "registry.infrahouse.com/infrahouse/cloud-init/aws"
-  version                  = "2.2.2"
-  environment              = var.environment
-  role                     = "jumphost"
-  gzip_userdata            = true
-  ubuntu_codename          = var.ubuntu_codename
-  custom_facts             = var.puppet_custom_facts
+  source          = "registry.infrahouse.com/infrahouse/cloud-init/aws"
+  version         = "2.2.2"
+  environment     = var.environment
+  role            = "jumphost"
+  gzip_userdata   = true
+  ubuntu_codename = var.ubuntu_codename
+  # Always include CloudWatch facts merged with user facts
+  custom_facts = merge(
+    var.puppet_custom_facts,
+    {
+      jumphost = {
+        cloudwatch_log_group = aws_cloudwatch_log_group.jumphost.name
+      }
+    }
+  )
   puppet_debug_logging     = var.puppet_debug_logging
   puppet_environmentpath   = var.puppet_environmentpath
   puppet_hiera_config_path = var.puppet_hiera_config_path
@@ -67,6 +75,9 @@ module "jumphost_userdata" {
       public : tls_private_key.ed25519.public_key_openssh
     }
   ] : var.ssh_host_keys
+  post_runcmd = [
+    "touch /var/run/puppet-done"
+  ]
 }
 
 resource "tls_private_key" "deployer" {
