@@ -21,7 +21,8 @@ a Network Load Balancer in public subnets, using Ubuntu Pro images with EFS-back
 - **cloudwatch-logs.tf**: CloudWatch Logs configuration for security audit trails
 
 ### CloudWatch Integration
-- **Always-on CloudWatch logging** at `/aws/ec2/jumphost/{environment}`
+- **Always-on CloudWatch logging** at `/aws/ec2/jumphost/{environment}/{hostname}`
+- Log group naming ensures multiple jumphosts can coexist in same environment
 - IAM permissions automatically configured for CloudWatch agent
 - Log group name passed to instances via Puppet facts for agent configuration
 - Default 365-day retention for compliance (configurable via `log_retention_days`)

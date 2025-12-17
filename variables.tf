@@ -102,7 +102,18 @@ variable "packages" {
 }
 
 variable "puppet_custom_facts" {
-  description = "A map of custom puppet facts."
+  description = <<-EOF
+    A map of custom puppet facts. The module uses deep merge to combine user facts
+    with module-managed facts. User-provided values take precedence on conflicts.
+
+    Module automatically provides:
+    - jumphost.cloudwatch_log_group: CloudWatch log group name for logging configuration
+
+    Example: If you provide { jumphost = { foo = "bar" } }, the result will be:
+    { jumphost = { foo = "bar", cloudwatch_log_group = "/aws/ec2/jumphost/..." } }
+
+    Both your custom facts and module facts are preserved.
+  EOF
   type        = any
   default     = {}
 }
