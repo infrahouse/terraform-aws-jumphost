@@ -9,7 +9,7 @@ This guide provides the exact code changes needed to implement **mandatory** Clo
 ```hcl
 # CloudWatch log group for jumphost logs (always created)
 resource "aws_cloudwatch_log_group" "jumphost" {
-  name              = "/aws/ec2/jumphost/${var.environment}"
+  name              = "/aws/ec2/jumphost/${var.environment}/${var.route53_hostname}"
   retention_in_days = var.log_retention_days
   kms_key_id        = var.cloudwatch_kms_key_arn
 

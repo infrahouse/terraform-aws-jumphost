@@ -25,12 +25,17 @@ module "jumphost_userdata" {
   gzip_userdata   = true
   ubuntu_codename = var.ubuntu_codename
   # Always include CloudWatch facts merged with user facts
+  # Deep merge to preserve any user-provided jumphost.* facts
+  # User's input has precedence on conflicts
   custom_facts = merge(
     var.puppet_custom_facts,
     {
-      jumphost = {
-        cloudwatch_log_group = aws_cloudwatch_log_group.jumphost.name
-      }
+      jumphost = merge(
+        {
+          cloudwatch_log_group = aws_cloudwatch_log_group.jumphost.name
+        },
+        lookup(var.puppet_custom_facts, "jumphost", {})
+      )
     }
   )
   puppet_debug_logging     = var.puppet_debug_logging

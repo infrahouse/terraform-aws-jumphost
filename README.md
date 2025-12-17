@@ -110,7 +110,7 @@ The instance profile follows the **principle of least privilege**, granting only
 
 The module creates a CloudWatch log group for centralized logging and audit trails. This is a **mandatory** security feature that cannot be disabled.
 
-The CloudWatch log group is automatically created and its name is passed to instances via Puppet facts. The Puppet configuration is responsible for installing and configuring the CloudWatch agent to ship logs to this log group.
+The CloudWatch log group is automatically created with the naming pattern `/aws/ec2/jumphost/${environment}/${hostname}` and its name is passed to instances via Puppet facts. This naming scheme ensures that multiple jumphosts can coexist in the same environment without conflicts. The Puppet configuration is responsible for installing and configuring the CloudWatch agent to ship logs to this log group.
 
 ### Log Configuration
 
@@ -226,7 +226,7 @@ module "jumphost" {
 | <a name="input_nlb_subnet_ids"></a> [nlb\_subnet\_ids](#input\_nlb\_subnet\_ids) | List of subnet ids where the NLB will be created. | `list(string)` | n/a | yes |
 | <a name="input_on_demand_base_capacity"></a> [on\_demand\_base\_capacity](#input\_on\_demand\_base\_capacity) | If specified, the ASG will request spot instances and this will be the minimal number of on-demand instances. | `number` | `null` | no |
 | <a name="input_packages"></a> [packages](#input\_packages) | List of packages to install when the instance bootstraps. | `list(string)` | `[]` | no |
-| <a name="input_puppet_custom_facts"></a> [puppet\_custom\_facts](#input\_puppet\_custom\_facts) | A map of custom puppet facts. | `any` | `{}` | no |
+| <a name="input_puppet_custom_facts"></a> [puppet\_custom\_facts](#input\_puppet\_custom\_facts) | A map of custom puppet facts. The module uses deep merge to combine user facts<br/>with module-managed facts. User-provided values take precedence on conflicts.<br/><br/>Module automatically provides:<br/>- jumphost.cloudwatch\_log\_group: CloudWatch log group name for logging configuration<br/><br/>Example: If you provide { jumphost = { foo = "bar" } }, the result will be:<br/>{ jumphost = { foo = "bar", cloudwatch\_log\_group = "/aws/ec2/jumphost/..." } }<br/><br/>Both your custom facts and module facts are preserved. | `any` | `{}` | no |
 | <a name="input_puppet_debug_logging"></a> [puppet\_debug\_logging](#input\_puppet\_debug\_logging) | Enable debug logging if true. | `bool` | `false` | no |
 | <a name="input_puppet_environmentpath"></a> [puppet\_environmentpath](#input\_puppet\_environmentpath) | A path for directory environments. | `string` | `"{root_directory}/environments"` | no |
 | <a name="input_puppet_hiera_config_path"></a> [puppet\_hiera\_config\_path](#input\_puppet\_hiera\_config\_path) | Path to hiera configuration file. | `string` | `"{root_directory}/environments/{environment}/hiera.yaml"` | no |
