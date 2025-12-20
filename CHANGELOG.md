@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.5.0] - 2025-12-20
+
+### Features
+
+- Add mandatory CloudWatch logging and metrics for security compliance
+
 ## [4.4.0] - 2025-12-17
 
 ### Bug Fixes
