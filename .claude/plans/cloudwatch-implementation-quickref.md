@@ -1,7 +1,8 @@
 # CloudWatch Implementation Quick Reference
 
 ## Overview
-This guide provides the exact code changes needed to implement **mandatory** CloudWatch logging for the jumphost module. CloudWatch logging is always-on for security compliance.
+This guide provides the exact code changes needed to implement **mandatory** CloudWatch logging for the jumphost module.
+CloudWatch logging is always-on for security compliance.
 
 ## File Changes Summary
 
@@ -401,30 +402,30 @@ def test_module(
 ## Implementation Checklist
 
 ### Before Starting
-- [ ] Create a feature branch
-- [ ] Review current `main.tf` and `data_sources.tf` structure
+- [x] Create a feature branch (working on main branch)
+- [x] Review current `main.tf` and `data_sources.tf` structure
 
 ### Implementation Steps
-1. [ ] Create `cloudwatch-logs.tf` with log group and IAM policy
-2. [ ] Add two new variables to `variables.tf`
-3. [ ] Add `combined_permissions` data source to `data_sources.tf`
-4. [ ] Update `aws_iam_policy.required` to use combined permissions
-5. [ ] Update `module.jumphost_profile` to use combined permissions
-6. [ ] Update `module.jumphost_userdata` with CloudWatch facts
-7. [ ] Add two new outputs to `outputs.tf`
-8. [ ] Update test configuration in `test_data/jumphost/main.tf`
-9. [ ] Add test function to `tests/test_module.py`
+1. [x] Create `cloudwatch-logs.tf` with log group and IAM policy
+2. [x] Add two new variables to `variables.tf` (actually added 3: log_retention_days, cloudwatch_kms_key_arn, cloudwatch_namespace)
+3. [x] Add `combined_permissions` data source to `data_sources.tf`
+4. [x] Update `aws_iam_policy.required` to use combined permissions
+5. [x] Update `module.jumphost_profile` to use combined permissions
+6. [x] Update `module.jumphost_userdata` with CloudWatch facts (includes cloudwatch_log_group and cloudwatch_namespace)
+7. [x] Add two new outputs to `outputs.tf`
+8. [x] Update test configuration in `test_data/jumphost/main.tf`
+9. [x] Add test function to `tests/test_module.py`
 
 ### Testing
-- [ ] Run `terraform fmt -recursive`
-- [ ] Run `terraform validate` in test_data/jumphost
-- [ ] Run `make test TEST_FILTER=""` to test all scenarios
-- [ ] Verify IAM permissions are correctly merged
-- [ ] SSH to test instance and verify facts: `sudo facter -p jumphost`
+- [x] Run `terraform fmt -recursive`
+- [x] Run `terraform validate` in test_data/jumphost
+- [x] Run `make test TEST_FILTER=""` to test all scenarios
+- [x] Verify IAM permissions are correctly merged
+- [x] SSH to test instance and verify facts: `sudo facter -p jumphost`
 
 ### Documentation
-- [ ] Update README.md with CloudWatch section
-- [ ] Update CLAUDE.md with CloudWatch details
+- [x] Update README.md with CloudWatch section
+- [x] Update CLAUDE.md with CloudWatch details
 - [ ] Create release notes highlighting new mandatory logging
 
 ## Verification Commands

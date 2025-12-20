@@ -109,7 +109,7 @@ def verify_cloudwatch_logging(asg, boto3_session, aws_region):
 
     # Generate unique test message
     test_message = f"JUMPHOST_TEST_LOG_{uuid.uuid4().hex}"
-    log_stream_name = f"{instance.instance_id}/auth.log"
+    log_stream_name = f"{instance.instance_id}/auth/ssh"
 
     # Write test message to auth.log
     LOG.info("  Writing test message to /var/log/auth.log...")
@@ -171,7 +171,7 @@ def test_module(
     autoscaling_client,
     boto3_session,
 ):
-    nlb_subnet_ids = service_network["subnet_private_ids"]["value"]
+    nlb_subnet_ids = service_network["subnet_public_ids"]["value"]
     subnet_private_ids = service_network["subnet_private_ids"]["value"]
 
     terraform_module_dir = osp.join(TERRAFORM_ROOT_DIR, "jumphost")
@@ -245,18 +245,20 @@ def test_module(
 
         # Verify CloudWatch log group fact is passed to Puppet
         LOG.info("Verifying CloudWatch log group in Puppet facts...")
-        ret_code, cout, cerr = asg.instances[0].execute_command("bash -lc 'facter -p jumphost.cloudwatch_log_group'")
+        ret_code, cout, cerr = asg.instances[0].execute_command(
+            "bash -lc 'facter -p jumphost.cloudwatch_log_group'", execution_timeout=300
+        )
         expected_log_group = tf_output["cloudwatch_log_group_name"]["value"]
         assert ret_code == 0, f"Failed to get Puppet fact. stderr: {cerr}"
         assert expected_log_group in cout, f"Expected log group {expected_log_group} not found in Puppet facts: {cout}"
         LOG.info(f"✓ CloudWatch log group fact verified: {expected_log_group}")
 
-        # Test CloudWatch Logging Configuration (end-to-end test - for future use after Puppet is configured)
-        # verify_cloudwatch_logging(
-        #     asg=asg,
-        #     boto3_session=boto3_session,
-        #     aws_region=aws_region,
-        # )
+        # Test CloudWatch Logging Configuration
+        verify_cloudwatch_logging(
+            asg=asg,
+            boto3_session=boto3_session,
+            aws_region=aws_region,
+        )
 
         ret_code, cout, _ = asg.instances[0].execute_command("lsb_release -sc")
         assert ret_code == 0

@@ -108,9 +108,10 @@ variable "puppet_custom_facts" {
 
     Module automatically provides:
     - jumphost.cloudwatch_log_group: CloudWatch log group name for logging configuration
+    - jumphost.cloudwatch_namespace: CloudWatch namespace for custom metrics
 
     Example: If you provide { jumphost = { foo = "bar" } }, the result will be:
-    { jumphost = { foo = "bar", cloudwatch_log_group = "/aws/ec2/jumphost/..." } }
+    { jumphost = { foo = "bar", cloudwatch_log_group = "/aws/ec2/jumphost/...", cloudwatch_namespace = "Jumphost/System" } }
 
     Both your custom facts and module facts are preserved.
   EOF
@@ -226,4 +227,10 @@ variable "cloudwatch_kms_key_arn" {
   description = "ARN of KMS key for CloudWatch log encryption (null for AWS managed key)"
   type        = string
   default     = null
+}
+
+variable "cloudwatch_namespace" {
+  description = "CloudWatch namespace for custom metrics published by the jumphost"
+  type        = string
+  default     = "Jumphost/System"
 }

@@ -29,6 +29,22 @@ data "aws_iam_policy_document" "cloudwatch_logs" {
     ]
   }
 
+  # Permissions for CloudWatch Metrics (optional but recommended)
+  statement {
+    sid    = "CloudWatchMetrics"
+    effect = "Allow"
+    actions = [
+      "cloudwatch:PutMetricData"
+    ]
+    resources = ["*"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "cloudwatch:namespace"
+      values   = [var.cloudwatch_namespace]
+    }
+  }
+
   # EC2 metadata access for CloudWatch agent
   statement {
     sid    = "EC2Metadata"
