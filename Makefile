@@ -53,8 +53,8 @@ test-clean:  ## Run a test and destroy resources
 
 .PHONY: bootstrap
 bootstrap: ## bootstrap the development environment
-	pip install -U "pip ~= 25.2"
-	pip install -U "setuptools ~= 80.9"
+	pip install -U "pip ~= 26.1.2"
+	pip install -U "setuptools ~= 82.0.1"
 	pip install -r requirements.txt
 
 .PHONY: clean
