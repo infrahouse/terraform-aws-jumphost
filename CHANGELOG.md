@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.6.0] - 2026-07-03
+
+### Miscellaneous Tasks
+
+- Upgrade dependencies, cleanup the unused variables
+- Fix new lines
+
 ## [4.5.0] - 2025-12-20
 
 ### Features
