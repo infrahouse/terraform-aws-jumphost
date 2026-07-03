@@ -1,0 +1,16 @@
+framework:
+  - terraform
+skip-path:
+  # Test fixtures, not module code (e.g. short log retention for fast test runs)
+  - test_data
+skip-check:
+  # Registry modules are pinned by semantic version, not a git commit hash
+  - CKV_TF_1
+  # ICMP is intentionally allowed on the jumphost/EFS security groups
+  # (e.g. path MTU discovery); this is not an "all traffic on all ports" rule
+  - CKV_AWS_277
+  # The bastion NLB is disposable and recreated by the ASG; deletion
+  # protection would only hinder teardown
+  - CKV_AWS_150
+  # Access logging is not required for an SSH bastion NLB
+  - CKV_AWS_91
