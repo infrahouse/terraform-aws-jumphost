@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.0] - 2026-08-13
+
+### Features
+
+- Require AWS provider >= 6.0
+
 ## [4.6.0] - 2026-07-03
 
 ### Miscellaneous Tasks
