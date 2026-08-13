@@ -141,7 +141,7 @@ module "jumphost" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.31, < 7.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0, < 7.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.5 |
 | <a name="requirement_tls"></a> [tls](#requirement\_tls) | >= 4.0 |
 
@@ -149,7 +149,7 @@ module "jumphost" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.31, < 7.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.0, < 7.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.5 |
 | <a name="provider_tls"></a> [tls](#provider\_tls) | >= 4.0 |
 
@@ -157,7 +157,7 @@ module "jumphost" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_jumphost_profile"></a> [jumphost\_profile](#module\_jumphost\_profile) | registry.infrahouse.com/infrahouse/instance-profile/aws | 1.9.0 |
+| <a name="module_jumphost_profile"></a> [jumphost\_profile](#module\_jumphost\_profile) | registry.infrahouse.com/infrahouse/instance-profile/aws | 2.0.0 |
 | <a name="module_jumphost_userdata"></a> [jumphost\_userdata](#module\_jumphost\_userdata) | registry.infrahouse.com/infrahouse/cloud-init/aws | 2.4.0 |
 
 ## Resources
