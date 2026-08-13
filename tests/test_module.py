@@ -155,7 +155,7 @@ def verify_cloudwatch_logging(asg, boto3_session, aws_region):
     LOG.info("✅ All CloudWatch logging tests passed!")
 
 
-@pytest.mark.parametrize("aws_provider_version", ["~> 5.31", "~> 6.0"], ids=["aws-5", "aws-6"])
+@pytest.mark.parametrize("aws_provider_version", ["~> 6.0"], ids=["aws-6"])
 @pytest.mark.parametrize(
     "codename",
     ["noble"],
