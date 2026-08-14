@@ -7,6 +7,7 @@ locals {
 
 module "jumphost" {
   source                   = "../.."
+  alarm_emails             = var.alarm_emails
   subnet_ids               = var.asg_subnet_ids
   nlb_subnet_ids           = var.nlb_subnet_ids
   environment              = local.environment

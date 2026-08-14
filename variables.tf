@@ -1,3 +1,18 @@
+variable "alarm_emails" {
+  description = <<-EOF
+    List of email addresses to receive CloudWatch alarm notifications.
+    AWS SNS sends a confirmation email to each address - recipients MUST
+    click the confirmation link to activate notifications. Until confirmed,
+    alarms fire but notifications are not delivered.
+  EOF
+  type        = list(string)
+
+  validation {
+    condition     = length(var.alarm_emails) > 0
+    error_message = "alarm_emails must contain at least one email address."
+  }
+}
+
 variable "ami_id" {
   description = "AMI id for jumphost instances. By default, latest Ubuntu Pro var.ubuntu_codename."
   type        = string
@@ -176,12 +191,6 @@ variable "route53_ttl" {
   description = "TTL in seconds on the Route53 record."
   type        = number
   default     = 300
-}
-
-variable "sns_topic_alarm_arn" {
-  description = "ARN of SNS topic for Cloudwatch alarms on base EC2 instance."
-  type        = string
-  default     = null
 }
 
 variable "ssh_host_keys" {

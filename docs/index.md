@@ -50,6 +50,7 @@ module "jumphost" {
   subnet_ids      = module.vpc.subnet_public_ids
   nlb_subnet_ids  = module.vpc.subnet_public_ids
   route53_zone_id = data.aws_route53_zone.example.zone_id
+  alarm_emails    = ["ops-team@example.com"]
 }
 ```
 

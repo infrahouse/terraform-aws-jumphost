@@ -50,12 +50,17 @@ resource "aws_route53_zone" "example" {
 }
 
 module "jumphost" {
-  source = "../.."
+  source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
+  version = "5.0.0"
 
   environment     = local.environment
   subnet_ids      = module.network.subnet_public_ids
   nlb_subnet_ids  = module.network.subnet_public_ids
   route53_zone_id = aws_route53_zone.example.zone_id
+
+  # Each address receives an SNS subscription confirmation email that
+  # must be confirmed before alarm notifications are delivered.
+  alarm_emails = ["ops-team@example.com"]
 
   # InfraHouse Puppet code configures SSH users, the NLB health check
   # echo service, and the CloudWatch agent on the instances.

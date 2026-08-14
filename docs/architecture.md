@@ -145,8 +145,10 @@ The log group name and metric namespace are passed to the instances as Puppet fa
 (`jumphost.cloudwatch_log_group`, `jumphost.cloudwatch_namespace`); Puppet installs and
 configures the CloudWatch agent to ship logs there.
 
-`cloudwatch.tf` optionally creates a CPU utilization alarm (fires above 90%) that
-publishes to `sns_topic_alarm_arn`.
+`cloudwatch.tf` creates an SNS topic for alarm notifications, subscribes every address
+in `alarm_emails` to it, and creates a CPU utilization alarm (fires above 90%) that
+publishes to the topic. The topic ARN is exposed as the `alarm_sns_topic_arn` output
+so additional subscriptions (PagerDuty, Slack, etc.) can be attached.
 
 ## Instance Bootstrap
 
