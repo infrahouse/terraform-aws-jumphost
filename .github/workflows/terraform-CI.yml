@@ -40,16 +40,11 @@ jobs:
           aws-region: "us-west-1"
           role-duration-seconds: 7200
 
-      - name: Set Terraform version
-        id: "terraform_version"
-        run: echo "IH_TF_VERSION=$(cat test_data/sql-ecs/.terraform-version)" >> "$GITHUB_OUTPUT"
-
       # Install the latest version of Terraform CLI
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
-          terraform_version: ${{ steps.terraform_version.outputs.IH_TF_VERSION }}
 
       # Prepare Python environment
       - name: Setup Python Environment
