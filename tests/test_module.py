@@ -41,25 +41,38 @@ def verify_cloudwatch_logging(asg, boto3_session, aws_region):
     # 0. Wait for Puppet to complete (marked by /var/run/puppet-done)
     LOG.info("0. Waiting for Puppet to complete bootstrap (up to 10 minutes)...")
     max_wait = 600  # 10 minutes
-    poll_interval = 10
-    puppet_done = False
+    start = time.time()
 
-    for attempt in range(max_wait // poll_interval):
-        exit_code, stdout, stderr = instance.execute_command(
-            "test -f /var/run/puppet-done && echo 'done' || echo 'not done'"
+    try:
+        ret_code, _, _ = instance.execute_command(
+            "until test -f /var/run/puppet-done; do sleep 5; done",
+            execution_timeout=max_wait,
+        )
+        puppet_done = ret_code == 0
+    except TimeoutError:
+        puppet_done = False
+
+    if not puppet_done:
+        # Bootstrap runs under `set -euo pipefail` and writes the marker only
+        # on success, so a missing marker means a step failed or hung. Collect
+        # evidence before teardown terminates the instance.
+        diagnostics = ""
+        for title, command in (
+            ("cloud-init status", "cloud-init status --long"),
+            ("cloud-init-output.log", "cat /var/log/cloud-init-output.log"),
+        ):
+            try:
+                _, cout, cerr = instance.execute_command(f"sudo {command}", execution_timeout=120)
+                diagnostics += f"\n----- {title} -----\n{cout}{cerr}"
+            except TimeoutError as err:
+                diagnostics += f"\n----- {title}: failed to collect: {err} -----\n"
+        pytest.fail(
+            f"Puppet bootstrap did not complete after {max_wait} seconds. "
+            f"Marker file /var/run/puppet-done not found.\n"
+            f"Instance diagnostics:{diagnostics}"
         )
 
-        if exit_code == 0 and stdout.strip() == "done":
-            puppet_done = True
-            LOG.info(f"✓ Puppet bootstrap completed (after {(attempt + 1) * poll_interval} seconds)")
-            break
-
-        LOG.info(f"   Puppet still running (attempt {attempt + 1}/{max_wait // poll_interval})...")
-        time.sleep(poll_interval)
-
-    assert puppet_done, (
-        f"Puppet bootstrap did not complete after {max_wait} seconds. " f"Marker file /var/run/puppet-done not found."
-    )
+    LOG.info(f"✓ Puppet bootstrap completed (after {int(time.time() - start)} seconds)")
 
     # 1. Verify CloudWatch log group is in Puppet facts
     LOG.info("1. Checking Puppet facts for CloudWatch log group...")
@@ -192,7 +205,8 @@ def test_module(
 
     # Update provider version
     with open(f"{terraform_module_dir}/terraform.tf", "w") as fp:
-        fp.write(f"""
+        fp.write(
+            f"""
             terraform {{
                 required_version = "~> 1.0"
                 required_providers {{
@@ -202,21 +216,30 @@ def test_module(
                     }}
                   }}
                 }}
-            """)
+            """
+        )
 
     with open(osp.join(terraform_module_dir, "terraform.tfvars"), "w") as fp:
-        fp.write(dedent(f"""
+        fp.write(
+            dedent(
+                f"""
                 region = "{aws_region}"
                 test_zone_id = "{subzone["subzone_id"]["value"]}"
                 ubuntu_codename = "{codename}"
 
                 nlb_subnet_ids = {json.dumps(nlb_subnet_ids)}
                 asg_subnet_ids = {json.dumps(subnet_private_ids)}
-                """))
+                """
+            )
+        )
         if test_role_arn:
-            fp.write(dedent(f"""
+            fp.write(
+                dedent(
+                    f"""
                     role_arn      = "{test_role_arn}"
-                    """))
+                    """
+                )
+            )
 
     with terraform_apply(
         terraform_module_dir,
