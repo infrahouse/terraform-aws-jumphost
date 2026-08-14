@@ -3,6 +3,9 @@ framework:
 skip-path:
   # Test fixtures, not module code (e.g. short log retention for fast test runs)
   - test_data
+  # Demo configurations with placeholder resources (e.g. example.com zone
+  # without DNSSEC/query logging), not module code
+  - examples
 skip-check:
   # Registry modules are pinned by semantic version, not a git commit hash
   - CKV_TF_1
