@@ -57,6 +57,7 @@ module "jumphost" {
   nlb_subnet_ids   = module.vpc.subnet_public_ids
   route53_zone_id  = data.aws_route53_zone.example.zone_id
   route53_hostname = "jumphost" # the default
+  alarm_emails     = ["ops-team@example.com"]
 
   puppet_hiera_config_path = "/opt/infrahouse-puppet-data/environments/production/hiera.yaml"
   packages = [
@@ -83,6 +84,12 @@ ssh ubuntu@jumphost.example.com
 The first instance can take a few minutes to pass health checks while cloud-init
 and Puppet configure it.
 
+!!! warning "Confirm the SNS subscription emails"
+
+    Each address in `alarm_emails` receives a confirmation email from AWS SNS.
+    Until the recipient clicks the confirmation link, alarms fire but
+    notifications are not delivered. Check spam folders after the first apply.
+
 ## What Gets Created
 
 - A Network Load Balancer with a TCP listener on port 22
@@ -92,6 +99,7 @@ and Puppet configure it.
 - Generated SSH host keys (RSA, ECDSA, ED25519) shared by all instances
 - An IAM instance profile with least-privilege permissions
 - A CloudWatch log group at `/aws/ec2/jumphost/<environment>/<hostname>.<zone>`
+- An SNS topic with email subscriptions for CloudWatch alarm notifications
 - Security groups for the jump host instances and the EFS mount targets
 - A Route53 record `<route53_hostname>.<zone name>` pointing at the NLB
 

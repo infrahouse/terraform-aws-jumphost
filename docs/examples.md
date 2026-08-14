@@ -22,6 +22,7 @@ module "jumphost" {
   subnet_ids      = module.vpc.subnet_public_ids
   nlb_subnet_ids  = module.vpc.subnet_public_ids
   route53_zone_id = data.aws_route53_zone.example.zone_id
+  alarm_emails    = ["ops-team@example.com"]
 
   puppet_hiera_config_path = "/opt/infrahouse-puppet-data/environments/production/hiera.yaml"
   packages = [
@@ -46,6 +47,7 @@ module "jumphost" {
   subnet_ids      = module.vpc.subnet_public_ids
   nlb_subnet_ids  = module.vpc.subnet_public_ids
   route53_zone_id = data.aws_route53_zone.example.zone_id
+  alarm_emails    = ["ops-team@example.com"]
 
   on_demand_base_capacity = 0
 }
@@ -66,6 +68,7 @@ module "jumphost" {
   subnet_ids      = module.vpc.subnet_private_ids
   nlb_subnet_ids  = module.vpc.subnet_private_ids
   route53_zone_id = data.aws_route53_zone.internal.zone_id
+  alarm_emails    = ["ops-team@example.com"]
 }
 ```
 
@@ -116,8 +119,9 @@ module "jumphost" {
 
 ## Custom KMS Keys and Alerting
 
-Encrypt EFS and CloudWatch logs with customer-managed keys and send CPU alarms to an
-SNS topic:
+Encrypt EFS and CloudWatch logs with customer-managed keys. Alarm emails are always
+required; the module's SNS topic is exposed as an output, so integrations like
+PagerDuty can subscribe to it:
 
 ```hcl
 module "jumphost" {
@@ -126,10 +130,16 @@ module "jumphost" {
 
   # ... network configuration ...
 
+  alarm_emails           = ["ops-team@example.com", "on-call@example.com"]
   efs_kms_key_arn        = aws_kms_key.efs.arn
   cloudwatch_kms_key_arn = aws_kms_key.logs.arn
   log_retention_days     = 731
-  sns_topic_alarm_arn    = aws_sns_topic.alarms.arn
+}
+
+resource "aws_sns_topic_subscription" "pagerduty" {
+  topic_arn = module.jumphost.alarm_sns_topic_arn
+  protocol  = "https"
+  endpoint  = "https://events.pagerduty.com/integration/.../enqueue"
 }
 ```
 

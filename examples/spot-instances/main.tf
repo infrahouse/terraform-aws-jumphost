@@ -51,12 +51,15 @@ resource "aws_route53_zone" "example" {
 }
 
 module "jumphost" {
-  source = "../.."
+  source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
+  version = "5.0.0"
 
   environment     = local.environment
   subnet_ids      = module.network.subnet_public_ids
   nlb_subnet_ids  = module.network.subnet_public_ids
   route53_zone_id = aws_route53_zone.example.zone_id
+
+  alarm_emails = ["ops-team@example.com"]
 
   # 0 on-demand instances: the whole fleet runs on spot capacity.
   # Set to 1 or more to keep that many instances on-demand.

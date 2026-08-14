@@ -25,6 +25,11 @@ output "jumphost_hostname" {
   value = "${var.route53_hostname}.${data.aws_route53_zone.jumphost_zone.name}"
 }
 
+output "alarm_sns_topic_arn" {
+  description = "ARN of the SNS topic that receives CloudWatch alarm notifications."
+  value       = aws_sns_topic.alarms.arn
+}
+
 output "cloudwatch_log_group_name" {
   description = "Name of the CloudWatch log group for jumphost logs"
   value       = aws_cloudwatch_log_group.jumphost_logs.name

@@ -1,6 +1,10 @@
 variable "role_arn" {
   default = null
 }
+variable "alarm_emails" {
+  type    = list(string)
+  default = ["devnull@infrahouse.com"]
+}
 variable "test_zone_id" {}
 variable "region" {}
 
