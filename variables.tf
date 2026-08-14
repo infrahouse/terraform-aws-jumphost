@@ -32,9 +32,9 @@ variable "asg_max_size" {
 }
 
 variable "efs_creation_token" {
-  description = "A unique name used as reference when creating the EFS file system. Must be unique across all EFS file systems in the AWS account. Change this value when creating multiple jumphosts to avoid conflicts."
+  description = "A unique name used as reference when creating the EFS file system. Must be unique across all EFS file systems in the AWS account. By default, a unique token is generated per deployment. Set it explicitly to keep a filesystem created by module version < 6.0 (the old default was \"jumphost-home-encrypted\"). Changing the token replaces the filesystem and destroys its data."
   type        = string
-  default     = "jumphost-home-encrypted"
+  default     = null
 }
 
 variable "efs_kms_key_arn" {

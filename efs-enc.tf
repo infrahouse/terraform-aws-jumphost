@@ -1,5 +1,13 @@
+# Creation tokens are unique per account+region; a random suffix keeps
+# concurrent deployments from colliding. Deliberately not derived from the
+# hostname: a rename must never replace the filesystem and destroy /home.
+resource "random_string" "efs_token" {
+  length  = 12
+  special = false
+}
+
 resource "aws_efs_file_system" "home-enc" {
-  creation_token = var.efs_creation_token
+  creation_token = coalesce(var.efs_creation_token, "jumphost-home-${random_string.efs_token.result}")
   encrypted      = true
   kms_key_id     = var.efs_kms_key_arn != null ? var.efs_kms_key_arn : data.aws_kms_key.efs_default.arn
   protection {

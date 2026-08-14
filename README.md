@@ -77,16 +77,17 @@ module "jumphost" {
 ```
 ## Deploying Multiple Jumphosts
 
-When deploying multiple jumphost instances in the same AWS account, 
-you must provide a unique `efs_creation_token` for each deployment to avoid EFS conflicts:
+Multiple jumphosts coexist in the same AWS account out of the box: the module generates
+a unique EFS creation token per deployment, and CloudWatch log groups are namespaced by
+hostname and zone. Give each jumphost its own `route53_hostname` (or zone) and deploy:
 
-  ```hcl
-  module "jumphost_prod" {
+```hcl
+module "jumphost_prod" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
   version = "5.0.0"
 
-  efs_creation_token = "jumphost-home-prod"
-  environment        = "production"
+  environment      = "production"
+  route53_hostname = "jumphost"
   # ... other configuration ...
 }
 
@@ -94,13 +95,15 @@ module "jumphost_staging" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
   version = "5.0.0"
 
-  efs_creation_token = "jumphost-home-staging"
-  environment        = "staging"
+  environment      = "staging"
+  route53_hostname = "jumphost-staging"
   # ... other configuration ...
 }
+```
 
-Note: Changing efs_creation_token on an existing deployment will destroy and recreate the EFS file system, 
-resulting in data loss. Plan carefully when modifying this value.
+Note: Set `efs_creation_token` explicitly only to keep a file system created by module
+version < 6.0 (the old default was `jumphost-home-encrypted`). Changing the token on an
+existing deployment will destroy and recreate the EFS file system, resulting in data loss.
 
 ## IAM instance profile
 
@@ -232,6 +235,7 @@ module "jumphost" {
 | [aws_vpc_security_group_ingress_rule.icmp](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.ssh](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [random_string.asg_name](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [random_string.efs_token](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [random_string.profile-suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [tls_private_key.deployer](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
 | [tls_private_key.ecdsa](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
@@ -261,7 +265,7 @@ module "jumphost" {
 | <a name="input_asg_min_size"></a> [asg\_min\_size](#input\_asg\_min\_size) | Minimal number of EC2 instances in the ASG. By default, the number of subnets. | `number` | `null` | no |
 | <a name="input_cloudwatch_kms_key_arn"></a> [cloudwatch\_kms\_key\_arn](#input\_cloudwatch\_kms\_key\_arn) | ARN of KMS key for CloudWatch log encryption (null for AWS managed key) | `string` | `null` | no |
 | <a name="input_cloudwatch_namespace"></a> [cloudwatch\_namespace](#input\_cloudwatch\_namespace) | CloudWatch namespace for custom metrics published by the jumphost | `string` | `"Jumphost/System"` | no |
-| <a name="input_efs_creation_token"></a> [efs\_creation\_token](#input\_efs\_creation\_token) | A unique name used as reference when creating the EFS file system. Must be unique across all EFS file systems in the AWS account. Change this value when creating multiple jumphosts to avoid conflicts. | `string` | `"jumphost-home-encrypted"` | no |
+| <a name="input_efs_creation_token"></a> [efs\_creation\_token](#input\_efs\_creation\_token) | A unique name used as reference when creating the EFS file system. Must be unique across all EFS file systems in the AWS account. By default, a unique token is generated per deployment. Set it explicitly to keep a filesystem created by module version < 6.0 (the old default was "jumphost-home-encrypted"). Changing the token replaces the filesystem and destroys its data. | `string` | `null` | no |
 | <a name="input_efs_kms_key_arn"></a> [efs\_kms\_key\_arn](#input\_efs\_kms\_key\_arn) | KMS key ARN to use for EFS encryption. If not specified, AWS will use the default AWS managed key for EFS. | `string` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name. Passed on as a puppet fact. | `string` | n/a | yes |
 | <a name="input_extra_files"></a> [extra\_files](#input\_extra\_files) | Additional files to create on an instance. | <pre>list(<br/>    object(<br/>      {<br/>        content     = string<br/>        path        = string<br/>        permissions = string<br/>      }<br/>    )<br/>  )</pre> | `[]` | no |
