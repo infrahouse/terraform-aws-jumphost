@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.0] - 2026-08-14
+
+### Bug Fixes
+
+- Include Route53 zone in CloudWatch log group name
+- Drop dead 'Set Terraform version' CI step
+- Generate unique EFS creation token by default
+
+### Documentation
+
+- Implement Terraform Module Requirements
+
+### Features
+
+- Require alarm_emails for CloudWatch alarm notifications
+
+### Miscellaneous Tasks
+
+- Exclude examples/ from checkov scans
+
+### Styling
+
+- Wrap lines longer than 120 characters
+
+### Testing
+
+- Fail puppet-done wait with instance diagnostics
+
 ## [5.0.0] - 2026-08-13
 
 ### Features
