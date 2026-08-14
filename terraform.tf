@@ -1,4 +1,7 @@
 terraform {
+  # removed blocks with lifecycle.destroy require Terraform 1.7
+  required_version = ">= 1.7"
+
   //noinspection HILUnresolvedReference
   required_providers {
     aws = {

@@ -83,7 +83,7 @@ module "jumphost" {
 | `cloudwatch_namespace` | `Jumphost/System` | Namespace for custom metrics published by the instances. |
 | `sns_topic_alarm_arn` | `null` | If set, a CPU utilization alarm (>90%) publishes to this SNS topic. |
 
-The log group `/aws/ec2/jumphost/<environment>/<route53_hostname>` is always created —
+The log group `/aws/ec2/jumphost/<environment>/<route53_hostname>.<zone>` is always created —
 logging is a mandatory security feature and cannot be disabled.
 
 ## IAM

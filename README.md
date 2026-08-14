@@ -152,7 +152,7 @@ The instance profile follows the **principle of least privilege**, granting only
 
 The module creates a CloudWatch log group for centralized logging and audit trails. This is a **mandatory** security feature that cannot be disabled.
 
-The CloudWatch log group is automatically created with the naming pattern `/aws/ec2/jumphost/${environment}/${hostname}` and its name is passed to instances via Puppet facts. This naming scheme ensures that multiple jumphosts can coexist in the same environment without conflicts. The Puppet configuration is responsible for installing and configuring the CloudWatch agent to ship logs to this log group.
+The CloudWatch log group is automatically created with the naming pattern `/aws/ec2/jumphost/${environment}/${hostname}.${zone}` and its name is passed to instances via Puppet facts. Because the hostname/zone pair is unique per deployment, multiple jumphosts can coexist in the same environment — even in the same AWS account — without conflicts. The Puppet configuration is responsible for installing and configuring the CloudWatch agent to ship logs to this log group.
 
 ### Log Configuration
 
@@ -183,6 +183,7 @@ module "jumphost" {
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0, < 7.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.5 |
 | <a name="requirement_tls"></a> [tls](#requirement\_tls) | >= 4.0 |
@@ -207,7 +208,7 @@ module "jumphost" {
 | Name | Type |
 |------|------|
 | [aws_autoscaling_group.jumphost](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group) | resource |
-| [aws_cloudwatch_log_group.jumphost](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_cloudwatch_log_group.jumphost_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_metric_alarm.cpu_utilization_alarm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_efs_file_system.home-enc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/efs_file_system) | resource |
 | [aws_efs_mount_target.home-enc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/efs_mount_target) | resource |
