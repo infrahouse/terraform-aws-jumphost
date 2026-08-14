@@ -119,7 +119,7 @@ run a different image.
 
 ## No Logs in CloudWatch
 
-**Symptom**: the log group `/aws/ec2/jumphost/<environment>/<hostname>` exists but stays
+**Symptom**: the log group `/aws/ec2/jumphost/<environment>/<hostname>.<zone>` exists but stays
 empty.
 
 **Cause**: the CloudWatch agent on the instances is installed and configured by Puppet.

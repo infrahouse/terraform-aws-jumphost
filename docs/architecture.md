@@ -135,8 +135,9 @@ policies to the role exposed in the `jumphost_role_name` output.
 ### CloudWatch Logging and Monitoring
 
 `cloudwatch-logs.tf` always creates a log group named
-`/aws/ec2/jumphost/<environment>/<route53_hostname>` — the per-hostname naming lets
-multiple jumphosts coexist in one environment. Retention defaults to 365 days for
+`/aws/ec2/jumphost/<environment>/<route53_hostname>.<zone>` — the hostname/zone pair is
+unique per deployment (the Route53 record already requires it), so multiple jumphosts
+can coexist in one environment or account. Retention defaults to 365 days for
 compliance and is configurable via `log_retention_days`; encryption can use a custom KMS
 key via `cloudwatch_kms_key_arn`.
 

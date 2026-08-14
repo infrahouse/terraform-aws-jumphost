@@ -27,10 +27,10 @@ output "jumphost_hostname" {
 
 output "cloudwatch_log_group_name" {
   description = "Name of the CloudWatch log group for jumphost logs"
-  value       = aws_cloudwatch_log_group.jumphost.name
+  value       = aws_cloudwatch_log_group.jumphost_logs.name
 }
 
 output "cloudwatch_log_group_arn" {
   description = "ARN of the CloudWatch log group for jumphost logs"
-  value       = aws_cloudwatch_log_group.jumphost.arn
+  value       = aws_cloudwatch_log_group.jumphost_logs.arn
 }

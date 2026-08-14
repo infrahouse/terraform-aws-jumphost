@@ -91,7 +91,7 @@ and Puppet configure it.
 - An encrypted EFS file system with mount targets in each subnet, mounted at `/home`
 - Generated SSH host keys (RSA, ECDSA, ED25519) shared by all instances
 - An IAM instance profile with least-privilege permissions
-- A CloudWatch log group at `/aws/ec2/jumphost/<environment>/<hostname>`
+- A CloudWatch log group at `/aws/ec2/jumphost/<environment>/<hostname>.<zone>`
 - Security groups for the jump host instances and the EFS mount targets
 - A Route53 record `<route53_hostname>.<zone name>` pointing at the NLB
 

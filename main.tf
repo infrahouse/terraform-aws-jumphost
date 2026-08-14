@@ -32,7 +32,7 @@ module "jumphost_userdata" {
     {
       jumphost = merge(
         {
-          cloudwatch_log_group = aws_cloudwatch_log_group.jumphost.name
+          cloudwatch_log_group = aws_cloudwatch_log_group.jumphost_logs.name
           cloudwatch_namespace = var.cloudwatch_namespace
         },
         lookup(var.puppet_custom_facts, "jumphost", {})
