@@ -1,8 +1,32 @@
 # terraform-aws-jumphost
 
+[![Need Help?](https://img.shields.io/badge/Need%20Help%3F-Contact%20Us-0066CC)](https://infrahouse.com/contact)
+[![Docs](https://img.shields.io/badge/docs-github.io-blue)](https://infrahouse.github.io/terraform-aws-jumphost/)
+[![Registry](https://img.shields.io/badge/Terraform-Registry-purple?logo=terraform)](https://registry.terraform.io/modules/infrahouse/jumphost/aws/latest)
+[![Release](https://img.shields.io/github/release/infrahouse/terraform-aws-jumphost.svg)](https://github.com/infrahouse/terraform-aws-jumphost/releases/latest)
+[![AWS EC2](https://img.shields.io/badge/AWS-EC2-orange?logo=amazonec2)](https://aws.amazon.com/ec2/)
+[![AWS EFS](https://img.shields.io/badge/AWS-EFS-orange?logo=amazonwebservices)](https://aws.amazon.com/efs/)
+[![Security](https://img.shields.io/github/actions/workflow/status/infrahouse/terraform-aws-jumphost/vuln-scanner-pr.yml?label=Security)](https://github.com/infrahouse/terraform-aws-jumphost/actions/workflows/vuln-scanner-pr.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
 The module creates a jump host to provide SSH access to AWS network resources not accessible from the internet.
 
 ![jumphost](https://github.com/infrahouse/terraform-aws-jumphost/assets/1763754/c4e0bf15-c7c6-4bab-8399-a7b5b711bfbc)
+
+## Why This Module?
+
+A bastion host sounds simple until you build one that survives real operations. A single EC2 instance
+loses user home directories when it's replaced, becomes a single point of failure, and quietly drifts
+out of patch compliance. This module packages the production-grade answer in one place:
+
+- **Highly available**: An autoscaling group fronted by a Network Load Balancer — an unhealthy
+  instance is replaced automatically and SSH stays reachable at the same DNS name.
+- **Nothing is lost on instance replacement**: Home directories live on an encrypted EFS file system
+  mounted at `/home`, and SSH host keys are stable across instance refreshes, so clients never see
+  "host key changed" warnings.
+- **Secure by default**: Ubuntu Pro images, encrypted EFS, IMDSv2 required, least-privilege IAM,
+  and an always-on CloudWatch audit trail for compliance (SOC 2, ISO 27001).
+- **Cost-optimized**: Optional spot instances with a configurable on-demand base capacity.
 
 ## Overview
 
@@ -10,23 +34,41 @@ The module deploys an autoscaling group fronted by a Network Load Balancer (NLB)
 The jump host instances use Ubuntu Pro images for enhanced security and mount an EFS volume at
 `/home` to preserve user data during instance refresh operations.
 
-**Key Features:**
+## Features
+
 - Network Load Balancer for high availability SSH access
 - Ubuntu Pro images with security updates and compliance certifications
 - EFS-backed `/home` directory for data persistence
 - Encrypted EFS file system with optional custom KMS key support
+- Stable SSH host keys across instance replacements
 - Least-privilege IAM permissions with extensible policy support
+- Always-on CloudWatch logging for security audit trails
 - CloudWatch monitoring and alarms
+- Spot instance support with configurable on-demand base capacity
+- Route53 DNS record for a stable SSH endpoint
+
+## Documentation
+
+For detailed documentation, visit the [GitHub Pages documentation site](https://infrahouse.github.io/terraform-aws-jumphost/).
+
+- [Getting Started](https://infrahouse.github.io/terraform-aws-jumphost/getting-started/)
+- [Architecture](https://infrahouse.github.io/terraform-aws-jumphost/architecture/)
+- [Configuration Reference](https://infrahouse.github.io/terraform-aws-jumphost/configuration/)
+- [Examples](https://infrahouse.github.io/terraform-aws-jumphost/examples/)
+- [Troubleshooting](https://infrahouse.github.io/terraform-aws-jumphost/troubleshooting/)
+
+## Quick Start
 
 ```hcl
-  module "jumphost" {
+module "jumphost" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
   version = "5.0.0"
 
-  subnet_ids        = module.management.subnet_public_ids
-  environment       = var.environment
-  route53_zone_id   = module.infrahouse_com.infrahouse_zone_id
-  route53_hostname  = "basion"  # jumphost by default
+  environment      = var.environment
+  subnet_ids       = module.management.subnet_public_ids
+  nlb_subnet_ids   = module.management.subnet_public_ids
+  route53_zone_id  = module.infrahouse_com.infrahouse_zone_id
+  route53_hostname = "bastion" # jumphost by default
   extra_policies = {
     (aws_iam_policy.package-publisher.name) : aws_iam_policy.package-publisher.arn
   }
@@ -256,3 +298,21 @@ module "jumphost" {
 | <a name="output_jumphost_role_arn"></a> [jumphost\_role\_arn](#output\_jumphost\_role\_arn) | Instance IAM role ARN. |
 | <a name="output_jumphost_role_name"></a> [jumphost\_role\_name](#output\_jumphost\_role\_name) | Instance IAM role name. |
 <!-- END_TF_DOCS -->
+
+## Examples
+
+Working examples live in the [examples/](examples/) directory:
+
+- [examples/basic](examples/basic) — a minimal internet-facing jumphost
+- [examples/spot-instances](examples/spot-instances) — a cost-optimized jumphost running on spot instances
+
+The [test_data/jumphost](test_data/jumphost) root module used by the integration tests
+is another complete, working configuration.
+
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+This module is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
