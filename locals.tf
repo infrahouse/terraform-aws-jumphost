@@ -13,4 +13,5 @@ locals {
   }
   ami_name_pattern_pro = "ubuntu-pro-server/images/hvm-ssd-gp3/ubuntu-${var.ubuntu_codename}-*"
   service_name         = "jumphost"
+  route53_zone_name    = trimsuffix(data.aws_route53_zone.jumphost_zone.name, ".")
 }

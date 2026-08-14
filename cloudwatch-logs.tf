@@ -14,7 +14,7 @@ removed {
 # The hostname.zone pair is unique per deployment: the Route53 record
 # already requires it, so concurrent deployments can't collide.
 resource "aws_cloudwatch_log_group" "jumphost_logs" {
-  name              = "/aws/ec2/jumphost/${var.environment}/${var.route53_hostname}.${trimsuffix(data.aws_route53_zone.jumphost_zone.name, ".")}"
+  name              = "/aws/ec2/jumphost/${var.environment}/${var.route53_hostname}.${local.route53_zone_name}"
   retention_in_days = var.log_retention_days
   kms_key_id        = var.cloudwatch_kms_key_arn
 

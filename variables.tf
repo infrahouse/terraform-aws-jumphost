@@ -32,13 +32,23 @@ variable "asg_max_size" {
 }
 
 variable "efs_creation_token" {
-  description = "A unique name used as reference when creating the EFS file system. Must be unique across all EFS file systems in the AWS account. By default, a unique token is generated per deployment. Set it explicitly to keep a filesystem created by module version < 6.0 (the old default was \"jumphost-home-encrypted\"). Changing the token replaces the filesystem and destroys its data."
+  description = <<-EOF
+    A unique name used as reference when creating the EFS file system.
+    Must be unique across all EFS file systems in the AWS account.
+    By default, a unique token is generated per deployment. Set it explicitly
+    to keep a filesystem created by module version < 6.0 (the old default was
+    "jumphost-home-encrypted"). Changing the token replaces the filesystem
+    and destroys its data.
+  EOF
   type        = string
   default     = null
 }
 
 variable "efs_kms_key_arn" {
-  description = "KMS key ARN to use for EFS encryption. If not specified, AWS will use the default AWS managed key for EFS."
+  description = <<-EOF
+    KMS key ARN to use for EFS encryption.
+    If not specified, AWS will use the default AWS managed key for EFS.
+  EOF
   type        = string
   default     = null
 }
@@ -105,7 +115,10 @@ variable "nlb_subnet_ids" {
 }
 
 variable "on_demand_base_capacity" {
-  description = "If specified, the ASG will request spot instances and this will be the minimal number of on-demand instances."
+  description = <<-EOF
+    If specified, the ASG will request spot instances
+    and this will be the minimal number of on-demand instances.
+  EOF
   type        = number
   default     = null
 }
@@ -126,7 +139,8 @@ variable "puppet_custom_facts" {
     - jumphost.cloudwatch_namespace: CloudWatch namespace for custom metrics
 
     Example: If you provide { jumphost = { foo = "bar" } }, the result will be:
-    { jumphost = { foo = "bar", cloudwatch_log_group = "/aws/ec2/jumphost/...", cloudwatch_namespace = "Jumphost/System" } }
+    { jumphost = { foo = "bar", cloudwatch_log_group = "/aws/ec2/jumphost/...",
+      cloudwatch_namespace = "Jumphost/System" } }
 
     Both your custom facts and module facts are preserved.
   EOF
@@ -153,7 +167,10 @@ variable "puppet_hiera_config_path" {
 }
 
 variable "puppet_manifest" {
-  description = "Path to puppet manifest. By default ih-puppet will apply {root_directory}/environments/{environment}/manifests/site.pp."
+  description = <<-EOF
+    Path to puppet manifest. By default ih-puppet will apply
+    {root_directory}/environments/{environment}/manifests/site.pp.
+  EOF
   type        = string
   default     = null
 }
