@@ -77,8 +77,8 @@ Tests use pytest with the `pytest-infrahouse` plugin. Key parameters:
 
 ### EFS and Data Persistence
 - Home directories are backed by encrypted EFS filesystem mounted at /home
-- EFS uses `efs_creation_token` to ensure uniqueness (critical for multiple deployments)
-- Changing `efs_creation_token` will destroy and recreate the EFS filesystem
+- A unique EFS creation token is generated per deployment; `efs_creation_token` overrides it (needed to keep filesystems created by module < 6.0, whose default was `jumphost-home-encrypted`)
+- Changing the creation token will destroy and recreate the EFS filesystem
 
 ### IAM and Security
 - Follows least-privilege principle with minimal IAM permissions
@@ -102,7 +102,7 @@ Hooks are automatically installed when running any make command.
 ## Common Troubleshooting
 
 ### Multiple Jumphost Deployments
-When deploying multiple jumphosts in the same AWS account, always provide unique `efs_creation_token` values to avoid EFS conflicts.
+Multiple jumphosts coexist in one AWS account without extra configuration: EFS creation tokens are generated per deployment and log groups are namespaced by hostname/zone. Conflicts only arise when `efs_creation_token` is explicitly set to the same value in two deployments.
 
 ### Testing
 - Tests require AWS credentials and appropriate permissions

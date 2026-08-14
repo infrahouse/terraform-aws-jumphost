@@ -61,12 +61,12 @@ module "jumphost" {
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `efs_creation_token` | `jumphost-home-encrypted` | Unique reference for the EFS file system. **Must be unique per AWS account** — set distinct values when deploying multiple jumphosts. |
+| `efs_creation_token` | generated per deployment | Unique reference for the EFS file system. Set explicitly only to keep a file system created by module version < 6.0 (old default: `jumphost-home-encrypted`). |
 | `efs_kms_key_arn` | AWS managed key | KMS key for EFS encryption. |
 
 !!! warning
 
-    Changing `efs_creation_token` on an existing deployment destroys and recreates the
+    Changing the creation token on an existing deployment destroys and recreates the
     EFS file system — all home directories are lost.
 
 ## DNS

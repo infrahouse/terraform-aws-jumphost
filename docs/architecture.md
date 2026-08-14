@@ -71,10 +71,13 @@ directories and nothing is lost when an instance is replaced.
 
 - **Encryption**: always on. AWS managed key by default, or bring your own via
   `efs_kms_key_arn`.
-- **Creation token**: `efs_creation_token` must be unique per EFS file system in an AWS
-  account. Deploying multiple jumphosts requires distinct tokens.
+- **Creation token**: EFS creation tokens must be unique per AWS account, so the module
+  generates a random one per deployment — multiple jumphosts coexist without extra
+  configuration. Deliberately not derived from the hostname: renaming the jumphost must
+  never replace the file system. Set `efs_creation_token` explicitly to keep a file
+  system created by module version < 6.0.
 
-!!! warning "Changing `efs_creation_token` recreates the file system"
+!!! warning "Changing the creation token recreates the file system"
 
     The creation token forces a new EFS file system. Changing it on an existing deployment
     destroys all home directories.

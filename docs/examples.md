@@ -74,17 +74,17 @@ module "jumphost" {
 
 ## Multiple Jumphosts in One Account
 
-Each deployment needs a unique `efs_creation_token`. Distinct `route53_hostname` values
-give each jump host its own DNS name and CloudWatch log group.
+EFS creation tokens are generated per deployment, so multiple jumphosts coexist without
+extra configuration. Distinct `route53_hostname` values give each jump host its own DNS
+name and CloudWatch log group.
 
 ```hcl
 module "jumphost_prod" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
   version = "5.0.0"
 
-  environment        = "production"
-  efs_creation_token = "jumphost-home-prod"
-  route53_hostname   = "jumphost"
+  environment      = "production"
+  route53_hostname = "jumphost"
   # ... network configuration ...
 }
 
@@ -92,9 +92,8 @@ module "jumphost_staging" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
   version = "5.0.0"
 
-  environment        = "staging"
-  efs_creation_token = "jumphost-home-staging"
-  route53_hostname   = "jumphost-staging"
+  environment      = "staging"
+  route53_hostname = "jumphost-staging"
   # ... network configuration ...
 }
 ```

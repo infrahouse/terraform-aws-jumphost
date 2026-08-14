@@ -10,10 +10,14 @@ Common issues when deploying and operating the jumphost module.
 CreationTokenInUse: The creation token 'jumphost-home-encrypted' is already in use
 ```
 
-**Cause**: another jumphost deployment (or leftover EFS file system) in the same AWS
-account already uses the default `efs_creation_token`.
+**Cause**: two deployments in the same AWS account set `efs_creation_token` explicitly
+to the same value. Since module version 6.0, a unique token is generated per deployment,
+so this only happens with explicit tokens — typically several upgraded deployments all
+pinning the old default `jumphost-home-encrypted`.
 
-**Fix**: set a unique token per deployment:
+**Fix**: only the deployment that owns the existing file system should pin its token;
+give the others distinct values, or let them generate one by leaving the variable unset
+(new file system):
 
 ```hcl
 efs_creation_token = "jumphost-home-staging"
