@@ -59,7 +59,11 @@ module "jumphost_userdata" {
       "${aws_efs_file_system.home-enc.dns_name}:/",
       "/home",
       "nfs4",
-      "nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev",
+      # noauto,x-systemd.automount keeps cloud-init's `mount -a` from touching /home:
+      # the mounts module runs in the init stage, before nfs-common (and therefore
+      # /sbin/mount.nfs4) is installed, so an auto entry fails and cloud-init reports
+      # `error` for the life of the instance. systemd mounts /home on first access.
+      "nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev,noauto,x-systemd.automount",
       "0",
       "0"
     ]
