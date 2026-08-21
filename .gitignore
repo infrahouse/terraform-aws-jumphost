@@ -4,6 +4,7 @@ terraform.tfstate*
 .terraform
 __pycache__
 .pytest_cache/
+pytest-*-output.log
 *.zip
 terraform.tfvars
 .terraform.tfstate.lock.info
