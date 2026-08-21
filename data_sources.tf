@@ -9,6 +9,23 @@ data "aws_iam_policy_document" "required_permissions" {
       aws_autoscaling_group.jumphost.arn
     ]
   }
+  # Lets profile::boot_security_upgrade drop the InspectorEc2Exclusion tag once
+  # security updates are applied. IAM has no "this instance only" variable for
+  # EC2, so created_by_module is the closest available blast-radius limit.
+  statement {
+    actions   = ["ec2:DeleteTags"]
+    resources = ["arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*"]
+    condition {
+      test     = "ForAllValues:StringEquals"
+      variable = "aws:TagKeys"
+      values   = ["InspectorEc2Exclusion"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:ResourceTag/created_by_module"
+      values   = ["infrahouse/jumphost/aws"]
+    }
+  }
 }
 
 data "aws_ami" "ubuntu_pro" {

@@ -16,7 +16,7 @@ from tests.conftest import (
 )
 
 
-def verify_cloudwatch_logging(asg, boto3_session, aws_region):
+def verify_cloudwatch_logging(instance, boto3_session, aws_region):
     """
     Verify CloudWatch logging end-to-end integration for jumphost instances.
 
@@ -28,51 +28,10 @@ def verify_cloudwatch_logging(asg, boto3_session, aws_region):
 
     Note: CloudWatch agent package, configuration, and service management
     are Puppet's responsibility. Terraform only tests the end result.
+
+    Assumes the instance finished bootstrapping (see EC2Instance.wait_for_bootstrap).
     """
-    LOG.info("Testing CloudWatch logging end-to-end integration...")
-
-    # Get an instance from the ASG
-    instances = list(asg.instances)
-    assert len(instances) > 0, "No instances found in ASG"
-
-    instance = instances[0]
-    LOG.info("Testing CloudWatch logging on instance: %s", instance.instance_id)
-
-    # 0. Wait for Puppet to complete (marked by /var/run/puppet-done)
-    LOG.info("0. Waiting for Puppet to complete bootstrap (up to 10 minutes)...")
-    max_wait = 600  # 10 minutes
-    start = time.time()
-
-    try:
-        ret_code, _, _ = instance.execute_command(
-            "until test -f /var/run/puppet-done; do sleep 5; done",
-            execution_timeout=max_wait,
-        )
-        puppet_done = ret_code == 0
-    except TimeoutError:
-        puppet_done = False
-
-    if not puppet_done:
-        # Bootstrap runs under `set -euo pipefail` and writes the marker only
-        # on success, so a missing marker means a step failed or hung. Collect
-        # evidence before teardown terminates the instance.
-        diagnostics = ""
-        for title, command in (
-            ("cloud-init status", "cloud-init status --long"),
-            ("cloud-init-output.log", "cat /var/log/cloud-init-output.log"),
-        ):
-            try:
-                _, cout, cerr = instance.execute_command(f"sudo {command}", execution_timeout=120)
-                diagnostics += f"\n----- {title} -----\n{cout}{cerr}"
-            except TimeoutError as err:
-                diagnostics += f"\n----- {title}: failed to collect: {err} -----\n"
-        pytest.fail(
-            f"Puppet bootstrap did not complete after {max_wait} seconds. "
-            f"Marker file /var/run/puppet-done not found.\n"
-            f"Instance diagnostics:{diagnostics}"
-        )
-
-    LOG.info(f"✓ Puppet bootstrap completed (after {int(time.time() - start)} seconds)")
+    LOG.info("Testing CloudWatch logging end-to-end integration on %s...", instance.instance_id)
 
     # 1. Verify CloudWatch log group is in Puppet facts
     LOG.info("1. Checking Puppet facts for CloudWatch log group...")
@@ -168,6 +127,52 @@ def verify_cloudwatch_logging(asg, boto3_session, aws_region):
     LOG.info("✅ All CloudWatch logging tests passed!")
 
 
+def verify_inspector_exclusion_tag_removed(asg, instance):
+    """
+    Verify the Inspector exclusion tag lifecycle.
+
+    The ASG tags instances with InspectorEc2Exclusion at launch and
+    profile::boot_security_upgrade removes it once security updates are applied.
+
+    Both halves matter: without the ASG assertion, "the tag is gone" also passes
+    on a module that never tags at all.
+
+    Assumes the instance finished bootstrapping (see EC2Instance.wait_for_bootstrap).
+    """
+    LOG.info("Verifying the Inspector exclusion tag lifecycle...")
+
+    # 1. The ASG still asks for the tag at launch
+    assert (
+        "InspectorEc2Exclusion" in asg.launch_tags
+    ), f"ASG does not propagate InspectorEc2Exclusion at launch. Launch tags: {sorted(asg.launch_tags)}"
+    LOG.info("✓ ASG propagates InspectorEc2Exclusion at launch")
+
+    # 2. Puppet removed it from the running instance. EC2 tag reads are eventually
+    #    consistent and EC2Instance caches its describe call for 10 seconds, so poll
+    #    on a longer interval than that TTL rather than asserting once.
+    max_wait = 60
+    poll_interval = 15
+
+    for _ in range(max_wait // poll_interval):
+        if "InspectorEc2Exclusion" not in instance.tags:
+            LOG.info("✓ InspectorEc2Exclusion removed from %s", instance.instance_id)
+            return
+        time.sleep(poll_interval)
+
+    # Still tagged. The likely cause is a missing or mis-scoped ec2:DeleteTags
+    # statement -- boot-security-upgrade.sh logs that case and exits 0.
+    _, cout, cerr = instance.execute_command(
+        "sudo grep -i InspectorEc2Exclusion /var/log/cloud-init-output.log",
+        execution_timeout=120,
+    )
+    pytest.fail(
+        f"InspectorEc2Exclusion still present on {instance.instance_id} {max_wait} seconds after "
+        f"the instance bootstrapped -- it would be invisible to Inspector forever. "
+        f"Check the ec2:DeleteTags statement in data_sources.tf.\n"
+        f"----- cloud-init-output.log -----\n{cout}{cerr}"
+    )
+
+
 @pytest.mark.parametrize("aws_provider_version", ["~> 6.0"], ids=["aws-6"])
 @pytest.mark.parametrize(
     "codename",
@@ -256,9 +261,18 @@ def test_module(
             asg_name=asg_name, autoscaling_client=autoscaling_client, timeout=3600, poll_interval=60
         )
 
+        instances = list(asg.instances)
+        assert len(instances) > 0, "No instances found in ASG"
+        instance = instances[0]
+
+        # Every check below needs a converged instance. cloud-init reports `done`
+        # only after ih-bootstrap - and therefore `ih-puppet apply` - succeeded,
+        # and raises with cloud-init diagnostics when it did not.
+        instance.wait_for_bootstrap()
+
         # Verify CloudWatch log group fact is passed to Puppet
         LOG.info("Verifying CloudWatch log group in Puppet facts...")
-        ret_code, cout, cerr = asg.instances[0].execute_command(
+        ret_code, cout, cerr = instance.execute_command(
             "bash -lc 'facter -p jumphost.cloudwatch_log_group'", execution_timeout=300
         )
         expected_log_group = tf_output["cloudwatch_log_group_name"]["value"]
@@ -268,11 +282,14 @@ def test_module(
 
         # Test CloudWatch Logging Configuration
         verify_cloudwatch_logging(
-            asg=asg,
+            instance=instance,
             boto3_session=boto3_session,
             aws_region=aws_region,
         )
 
-        ret_code, cout, _ = asg.instances[0].execute_command("lsb_release -sc")
+        # Inspector exclusion tag: applied at launch, removed once Puppet patched
+        verify_inspector_exclusion_tag_removed(asg=asg, instance=instance)
+
+        ret_code, cout, _ = instance.execute_command("lsb_release -sc")
         assert ret_code == 0
         assert cout.strip() == codename

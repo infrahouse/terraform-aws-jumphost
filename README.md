@@ -38,6 +38,7 @@ The jump host instances use Ubuntu Pro images for enhanced security and mount an
 
 - Network Load Balancer for high availability SSH access
 - Ubuntu Pro images with security updates and compliance certifications
+- Patched before the first AWS Inspector scan, so a fresh instance never opens a finding
 - EFS-backed `/home` directory for data persistence
 - Encrypted EFS file system with optional custom KMS key support
 - Stable SSH host keys across instance replacements
@@ -122,6 +123,23 @@ The instance profile follows the **principle of least privilege**, granting only
       resources = [
         aws_autoscaling_group.jumphost.arn
       ]
+    }
+    # Lets Puppet drop the InspectorEc2Exclusion tag once security updates
+    # are applied. Restricted to that one tag key, on instances this module
+    # created.
+    statement {
+      actions   = ["ec2:DeleteTags"]
+      resources = ["arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*"]
+      condition {
+        test     = "ForAllValues:StringEquals"
+        variable = "aws:TagKeys"
+        values   = ["InspectorEc2Exclusion"]
+      }
+      condition {
+        test     = "StringEquals"
+        variable = "ec2:ResourceTag/created_by_module"
+        values   = ["infrahouse/jumphost/aws"]
+      }
     }
   }
 ```
