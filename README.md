@@ -63,7 +63,7 @@ For detailed documentation, visit the [GitHub Pages documentation site](https://
 ```hcl
 module "jumphost" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
-  version = "6.0.0"
+  version = "6.1.0"
 
   environment      = var.environment
   subnet_ids       = module.management.subnet_public_ids
@@ -85,7 +85,7 @@ hostname and zone. Give each jumphost its own `route53_hostname` (or zone) and d
 ```hcl
 module "jumphost_prod" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
-  version = "6.0.0"
+  version = "6.1.0"
 
   environment      = "production"
   route53_hostname = "jumphost"
@@ -94,7 +94,7 @@ module "jumphost_prod" {
 
 module "jumphost_staging" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
-  version = "6.0.0"
+  version = "6.1.0"
 
   environment      = "staging"
   route53_hostname = "jumphost-staging"
