@@ -138,6 +138,37 @@ sudo tail /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
 
 Also verify the instance role kept its CloudWatch permissions if you customized IAM.
 
+## Jumphost Missing from Inspector Findings
+
+**Symptom**: a jumphost never appears in AWS Inspector findings — not "clean", simply absent.
+
+**Cause**: instances launch tagged `InspectorEc2Exclusion` so Inspector does not scan them
+before security updates are applied, and Puppet removes the tag once it has patched. If
+nothing removes it, the instance stays excluded forever. This fails open, so nothing alerts.
+
+**Diagnosis** — check whether the tag is still on the instance:
+
+```bash
+aws ec2 describe-tags --filters Name=resource-id,Values=i-xxxxxxxx Name=key,Values=InspectorEc2Exclusion
+```
+
+Empty output is the healthy case. If the tag is still there, look at the instance:
+
+```bash
+sudo grep -i InspectorEc2Exclusion /var/log/cloud-init-output.log
+```
+
+- `could not remove ... (no ec2:DeleteTags?)` — the instance role lost the `ec2:DeleteTags`
+  statement, most likely because IAM was customized. Removal is best effort by design and
+  never fails a Puppet run, so this is only ever a log line.
+- nothing at all — the Puppet code that removes the tag (`profile::boot_security_upgrade`,
+  included by `role::jumphost`) did not run. Check that Puppet completed:
+  `ls /var/run/puppet-done`.
+
+**Fix**: restore the permission or the Puppet code, then replace the instance — the tag is
+applied at launch, so the next instance goes through the cycle cleanly. To unblock scanning
+immediately, delete the tag by hand with `aws ec2 delete-tags`.
+
 ## Test Resources Left Behind
 
 **Symptom**: integration tests failed midway and AWS resources linger.

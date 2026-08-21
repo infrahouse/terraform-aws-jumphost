@@ -86,6 +86,16 @@ Tests use pytest with the `pytest-infrahouse` plugin. Key parameters:
   - `extra_policies` variable (map of policy ARNs)
   - Direct attachment to the output role (`jumphost_role_name`)
 
+### AWS Inspector Exclusion
+- The ASG tags instances `InspectorEc2Exclusion` at launch (`main.tf`), and Puppet's
+  `profile::boot_security_upgrade` removes it after applying pending security updates
+- `ec2:DeleteTags` in `data_sources.tf` is what allows the removal — scoped to that tag key
+  and to instances tagged `created_by_module = infrahouse/jumphost/aws`
+- **Fail-open**: an instance whose tag is never removed is invisible to Inspector forever.
+  The tag block and the IAM statement must ship together
+- `tests/test_module.py` asserts both halves: the ASG propagates the tag at launch, and the
+  tag is gone from the instance after bootstrap
+
 ### Instance Configuration
 - Uses Ubuntu Pro images (currently supports "noble" only)
 - Supports both on-demand and spot instances
