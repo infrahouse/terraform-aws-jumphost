@@ -66,6 +66,9 @@ make test-clean
 pytest -xvvs -k test_name tests/test_module.py
 ```
 
+`test-keep` and `test-clean` tee their output to `pytest-<timestamp>-output.log` (gitignored).
+The Makefile sets `SHELL`/`.SHELLFLAGS` for `pipefail` so a failing suite is not masked by `tee`.
+
 ### Test Configuration
 Tests use pytest with the `pytest-infrahouse` plugin. Key parameters:
 - `--aws-region`: AWS region for testing (default: us-west-2)

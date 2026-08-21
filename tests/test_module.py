@@ -208,43 +208,35 @@ def test_module(
     except FileNotFoundError:
         pass
 
-    # Update provider version
+    # Update provider version. Written terraform-fmt clean: `make lint` and the
+    # pre-commit hook run `terraform fmt -recursive`, which does not skip generated
+    # or gitignored files.
     with open(f"{terraform_module_dir}/terraform.tf", "w") as fp:
-        fp.write(
-            f"""
-            terraform {{
-                required_version = "~> 1.0"
-                required_providers {{
+        fp.write(dedent(f"""
+                terraform {{
+                  required_version = "~> 1.0"
+                  required_providers {{
                     aws = {{
                       source  = "hashicorp/aws"
                       version = "{aws_provider_version}"
                     }}
                   }}
                 }}
-            """
-        )
+                """))
 
     with open(osp.join(terraform_module_dir, "terraform.tfvars"), "w") as fp:
-        fp.write(
-            dedent(
-                f"""
-                region = "{aws_region}"
-                test_zone_id = "{subzone["subzone_id"]["value"]}"
+        fp.write(dedent(f"""
+                region          = "{aws_region}"
+                test_zone_id    = "{subzone["subzone_id"]["value"]}"
                 ubuntu_codename = "{codename}"
 
                 nlb_subnet_ids = {json.dumps(nlb_subnet_ids)}
                 asg_subnet_ids = {json.dumps(subnet_private_ids)}
-                """
-            )
-        )
+                """))
         if test_role_arn:
-            fp.write(
-                dedent(
-                    f"""
-                    role_arn      = "{test_role_arn}"
-                    """
-                )
-            )
+            fp.write(dedent(f"""
+                    role_arn = "{test_role_arn}"
+                    """))
 
     with terraform_apply(
         terraform_module_dir,

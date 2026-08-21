@@ -1,5 +1,10 @@
 .DEFAULT_GOAL := help
 
+# The test targets pipe pytest through tee. Without pipefail the recipe would
+# report tee's exit code and a failing test suite would look green.
+SHELL := /bin/bash
+.SHELLFLAGS := -o pipefail -c
+
 define PRINT_HELP_PYSCRIPT
 import re, sys
 
@@ -41,7 +46,8 @@ test-keep:  ## Run a test and keep resources
 		--test-role-arn=${TEST_ROLE} \
 		--keep-after \
 		-k '${TEST_FILTER}' \
-		tests/test_module.py
+		tests/test_module.py \
+		2>&1 | tee pytest-`date +%Y%m%d-%H%M%S`-output.log
 
 .PHONY: test-clean
 test-clean:  ## Run a test and destroy resources
@@ -49,7 +55,8 @@ test-clean:  ## Run a test and destroy resources
 		--aws-region=${TEST_REGION} \
 		--test-role-arn=${TEST_ROLE} \
 		-k '${TEST_FILTER}' \
-		tests/test_module.py
+		tests/test_module.py \
+		2>&1 | tee pytest-`date +%Y%m%d-%H%M%S`-output.log
 
 .PHONY: bootstrap
 bootstrap: ## bootstrap the development environment
