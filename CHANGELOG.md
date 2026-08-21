@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.0] - 2026-08-21
+
+### Bug Fixes
+
+- Mount /home via systemd automount so cloud-init does not fail
+
+### Features
+
+- Exclude jumphosts from Inspector until Puppet patches them
+
+### Testing
+
+- Save pytest output to a log file
+
 ## [6.0.0] - 2026-08-14
 
 ### Bug Fixes
