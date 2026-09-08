@@ -52,7 +52,7 @@ resource "aws_route53_zone" "example" {
 
 module "jumphost" {
   source  = "registry.infrahouse.com/infrahouse/jumphost/aws"
-  version = "6.1.0"
+  version = "6.1.1"
 
   environment     = local.environment
   subnet_ids      = module.network.subnet_public_ids
