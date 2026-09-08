@@ -32,7 +32,7 @@ a Network Load Balancer in public subnets, using Ubuntu Pro images with EFS-back
 ### Dependencies
 - Uses InfraHouse modules:
   - `registry.infrahouse.com/infrahouse/instance-profile/aws` (v2.0.0) - IAM instance profile management
-  - `registry.infrahouse.com/infrahouse/cloud-init/aws` (v2.2.2) - Cloud-init configuration
+  - `registry.infrahouse.com/infrahouse/cloud-init/aws` (v2.4.1) - Cloud-init configuration
 
 ## Development Commands
 
